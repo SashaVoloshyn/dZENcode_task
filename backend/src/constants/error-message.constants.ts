@@ -3,7 +3,7 @@ export const errorMessageConstants = {
     userNotFound: 'Користувача не знайдено. Зареєструйтесь, будь ласка.',
     unauthorized: 'Невірний email або пароль.',
     unknown: 'Невідома помилка',
-    clientKey: 'Невірні данні, число ключа повинно бути більше рівне нулю (>= 0), а тип ClientKeyEnum',
+    clientKey: 'Невірні данні, clientKey',
     userNotRegistration: 'ПОМИЛКА СЕРВЕРА: НЕ ВДАЛОСЯ ЗАПИСАТИ КОРИСТУВАЧА',
     authorization: 'Немає авторизованих данних',
     fileMimetype: 'Невірний формат файлу',
