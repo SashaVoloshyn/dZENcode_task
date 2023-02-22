@@ -10,4 +10,6 @@ export const mainConfig = {
     PG_HOST_DATABASE: process.env.PG_HOST_DATABASE || 'localhost',
     PG_PORT_DATABASE: process.env.PG_PORT_DATABASE || 5432,
     PG_PASSWORD_DATABASE: process.env.PG_PASSWORD_DATABASE || 'postgres',
+
+    PASSWORD_SALT_ROUNDS: process.env.PASSWORD_SALT_ROUNDS || 7,
 };
