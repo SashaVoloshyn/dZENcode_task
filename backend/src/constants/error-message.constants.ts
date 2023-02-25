@@ -8,7 +8,6 @@ export const errorMessageConstants = {
     authorization: 'Немає авторизованих данних',
     fileMimetype: 'Невірний формат файлу',
     fileSize: 'Розмір файла не валідний',
-    duplicateNewPassword: 'Новий пароль збігається зі старим паролем!',
     badRequest: 'Погані данні',
     notFound: 'Не знайдено.',
 };

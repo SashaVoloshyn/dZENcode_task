@@ -2,15 +2,19 @@ import { NextFunction } from 'express';
 
 import { IPayload, IRequest, IResponse, ITokenPair, IUser } from '../interfaces';
 import { Users } from '../entities';
-import { bcryptService, jwtService } from '../services';
-import { usersRepository } from '../repositories/users.repository';
+import { bcryptService, jwtService, s3Service } from '../services';
+import { clientRepository, usersRepository } from '../repositories';
 import { ErrorHandler } from '../errors';
-import { HttpMessageEnum, HttpStatusEnum } from '../enums';
+import { FileEnum, HttpMessageEnum, HttpStatusEnum, ItemTypeFileEnum } from '../enums';
 import { errorMessageConstants } from '../constants';
-import { clientRepository } from '../repositories/client.repository';
+import { mainConfig } from '../configs';
 
 class AuthController {
-    public async registration(req: IRequest, res: IResponse<Users>, next: NextFunction): Promise<IResponse<Users> | undefined> {
+    public async registration(
+        req: IRequest,
+        res: IResponse<Users>,
+        next: NextFunction
+    ): Promise<IResponse<Users> | undefined> {
         try {
             const { userName, email, password, avatar } = req.body as IUser;
 
@@ -29,6 +33,32 @@ class AuthController {
                 return;
             }
 
+            if (req.file) {
+                const userId = userDB.id;
+                const avatarSaved = await s3Service.uploadFile(
+                    req.file,
+                    userId,
+                    FileEnum.AVATARS,
+                    ItemTypeFileEnum.USERS
+                );
+
+                if (!avatarSaved.Location) {
+                    return res.status(HttpStatusEnum.PARTIAL_CONTENT).json({
+                        status: HttpStatusEnum.PARTIAL_CONTENT,
+                        data: { ...userDB },
+                        message: HttpMessageEnum.PARTIAL_CONTENT,
+                    });
+                }
+                const pathFile = avatarSaved.Location.split(mainConfig.CLOUD_DOMAIN_NAME!)[1];
+
+                await usersRepository.updateAvatar(userId, pathFile);
+                return res.status(HttpStatusEnum.CREATED).json({
+                    status: HttpStatusEnum.CREATED,
+                    data: { ...userDB, avatar: pathFile },
+                    message: HttpMessageEnum.CREATED,
+                });
+            }
+
             return res.status(HttpStatusEnum.CREATED).json({
                 status: HttpStatusEnum.CREATED,
                 data: userDB,
@@ -39,13 +69,17 @@ class AuthController {
         }
     }
 
-    public async login(req: IRequest, res: IResponse<ITokenPair>, next: NextFunction): Promise<IResponse<ITokenPair> | undefined> {
+    public async login(
+        req: IRequest,
+        res: IResponse<ITokenPair>,
+        next: NextFunction
+    ): Promise<IResponse<ITokenPair> | undefined> {
         try {
             const { userName, id } = req.user as Users;
 
-            const tokensPairGeneret = await jwtService.generateTokenPair({ id, userName });
+            const tokensPairGenerate = await jwtService.generateTokenPair({ id, userName });
 
-            if (!tokensPairGeneret) {
+            if (!tokensPairGenerate) {
                 next(
                     new ErrorHandler(
                         errorMessageConstants.unknown,
@@ -55,7 +89,7 @@ class AuthController {
                 );
                 return;
             }
-            const { accessToken, refreshToken, clientKey } = tokensPairGeneret;
+            const { accessToken, refreshToken, clientKey } = tokensPairGenerate;
 
             return res.status(HttpStatusEnum.OK).json({
                 status: HttpStatusEnum.OK,
@@ -71,7 +105,11 @@ class AuthController {
         }
     }
 
-    public async logout(req: IRequest, res: IResponse<number>, next: NextFunction): Promise<IResponse<number> | undefined> {
+    public async logout(
+        req: IRequest,
+        res: IResponse<number>,
+        next: NextFunction
+    ): Promise<IResponse<number> | undefined> {
         try {
             const clientKey = req.clientKey as string;
             const deletedTokens = await clientRepository.delete(clientKey);
@@ -97,7 +135,11 @@ class AuthController {
         }
     }
 
-    public async refresh(req: IRequest, res: IResponse<ITokenPair>, next: NextFunction): Promise<IResponse<ITokenPair> | undefined> {
+    public async refresh(
+        req: IRequest,
+        res: IResponse<ITokenPair>,
+        next: NextFunction
+    ): Promise<IResponse<ITokenPair> | undefined> {
         try {
             const reqClientKey = req.clientKey as string;
             const payload = req.payload as IPayload;

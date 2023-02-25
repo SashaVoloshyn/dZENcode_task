@@ -7,4 +7,5 @@ export const joiCommonValidator = {
     userName: Joi.string().regex(regexConstant.USERNAME).min(3).max(20).trim(),
     token: Joi.string().min(10),
     clientKey: Joi.string(),
+    pageUrl: Joi.string().allow('', null).uri().trim(),
 };

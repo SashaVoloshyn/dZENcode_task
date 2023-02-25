@@ -20,4 +20,10 @@ export const mainConfig = {
     EXPIRES_IN_REFRESH: process.env.EXPIRES_IN_REFRESH || '8h',
 
     EXPIRES_CLIENT_TOKENS_PAIR: process.env.EXPIRES_CLIENT_TOKENS_PAIR || '3600',
+
+    S3_NAME: process.env.S3_NAME,
+    S3_REGION: process.env.S3_REGION,
+    S3_ACCESS_KEY: process.env.S3_ACCESS_KEY,
+    S3_SECRET_KEY: process.env.S3_SECRET_KEY,
+    CLOUD_DOMAIN_NAME: process.env.CLOUD_DOMAIN_NAME,
 };

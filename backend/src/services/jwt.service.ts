@@ -3,7 +3,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import { IPayload, ITokenPair } from '../interfaces';
 import { mainConfig } from '../configs';
 import { ClientEnum } from '../enums';
-import { clientRepository } from '../repositories/client.repository';
+import { clientRepository } from '../repositories';
 import { authConstants } from '../constants';
 
 class JwtService {
@@ -15,7 +15,11 @@ class JwtService {
             expiresIn: mainConfig.EXPIRES_IN_REFRESH,
         });
 
-        const clientKey = clientRepository.generateClientKey(payload.id!, payload.userName!, ClientEnum.AUTHTOKEN) as string;
+        const clientKey = clientRepository.generateClientKey(
+            payload.id!,
+            payload.userName!,
+            ClientEnum.AUTHTOKEN
+        ) as string;
         const saveToken = await clientRepository.setExpire(
             clientKey,
             Number(mainConfig.EXPIRES_CLIENT_TOKENS_PAIR),

@@ -1,11 +1,18 @@
 import { Router } from 'express';
 
-import { authController } from '../controllers/auth.controller';
-import { authMiddleware } from '../middlewares';
+import { authController } from '../controllers';
+import { authMiddleware, userAvatar } from '../middlewares';
 
 export const authRouter = Router();
+const upload = userAvatar();
 
-authRouter.post('/registration', authMiddleware.registrationBodyValidate, authMiddleware.checkUserIsUniq, authController.registration);
+authRouter.post(
+    '/registration',
+    upload.single('avatar'),
+    authMiddleware.registrationBodyValidate,
+    authMiddleware.checkUserIsUniq,
+    authController.registration
+);
 
 authRouter.post(
     '/login',

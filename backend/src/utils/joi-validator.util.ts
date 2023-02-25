@@ -30,6 +30,33 @@ class JoiValidatorUtil {
     public static tokenSchema: Joi.ObjectSchema = Joi.object({
         token: joiCommonValidator.token.required().messages(errorValidationMessageConst),
     });
+
+    public static mainCommentsSchema: Joi.ObjectSchema = Joi.object({
+        pageUrl: joiCommonValidator.pageUrl.trim().optional().messages(errorValidationMessageConst),
+        text: Joi.string().trim().required().messages(errorValidationMessageConst),
+        userId: Joi.number().required().messages(errorValidationMessageConst),
+        fileText: Joi.binary().optional().messages(errorValidationMessageConst),
+        fileImg: Joi.binary().messages(errorValidationMessageConst).optional(),
+        clientKey: joiCommonValidator.clientKey.required().messages(errorValidationMessageConst),
+    });
+
+    public static commentsSchema: Joi.ObjectSchema = Joi.object({
+        text: Joi.string().trim().required().messages(errorValidationMessageConst),
+        userId: Joi.number().required().messages(errorValidationMessageConst),
+        mainCommentId: Joi.number().required().messages(errorValidationMessageConst),
+        fileText: Joi.binary().optional().messages(errorValidationMessageConst),
+        fileImg: Joi.binary().messages(errorValidationMessageConst).optional(),
+        clientKey: joiCommonValidator.clientKey.required().messages(errorValidationMessageConst),
+    });
 }
 
-export const { userSchema, tokenSchema, passwordSchema, loginSchema, clientKeySchema, emailSchema } = JoiValidatorUtil;
+export const {
+    userSchema,
+    tokenSchema,
+    passwordSchema,
+    loginSchema,
+    clientKeySchema,
+    emailSchema,
+    mainCommentsSchema,
+    commentsSchema,
+} = JoiValidatorUtil;

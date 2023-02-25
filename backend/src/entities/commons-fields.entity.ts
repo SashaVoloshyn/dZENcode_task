@@ -1,4 +1,11 @@
-import { CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, Timestamp, UpdateDateColumn } from 'typeorm';
+import {
+    CreateDateColumn,
+    DeleteDateColumn,
+    Entity,
+    PrimaryGeneratedColumn,
+    Timestamp,
+    UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class CommonFields {

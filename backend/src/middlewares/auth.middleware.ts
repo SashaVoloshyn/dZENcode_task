@@ -4,11 +4,10 @@ import { IPayload, IRequest, IUser } from '../interfaces';
 import { clientKeySchema, loginSchema, tokenSchema, userSchema } from '../utils';
 import { ErrorHandler } from '../errors';
 import { HttpMessageEnum, HttpStatusEnum } from '../enums';
-import { usersRepository } from '../repositories/users.repository';
+import { clientRepository, usersRepository } from '../repositories';
 import { authConstants, errorMessageConstants } from '../constants';
 import { bcryptService, jwtService } from '../services';
 import { Users } from '../entities';
-import { clientRepository } from '../repositories/client.repository';
 
 class AuthMiddleware {
     public registrationBodyValidate(req: IRequest, _: Response, next: NextFunction): void {
@@ -18,6 +17,7 @@ class AuthMiddleware {
                 next(new ErrorHandler(error.message, HttpStatusEnum.BAD_REQUEST, HttpMessageEnum.BAD_REQUEST));
                 return;
             }
+
             req.user = value;
             next();
         } catch (e) {
@@ -31,7 +31,13 @@ class AuthMiddleware {
             const user = await usersRepository.getOneByEmail(email);
 
             if (user) {
-                next(new ErrorHandler(errorMessageConstants.userAlreadyExists, HttpStatusEnum.CONFLICT, HttpMessageEnum.CONFLICT));
+                next(
+                    new ErrorHandler(
+                        errorMessageConstants.userAlreadyExists,
+                        HttpStatusEnum.CONFLICT,
+                        HttpMessageEnum.CONFLICT
+                    )
+                );
                 return;
             }
 
@@ -61,7 +67,13 @@ class AuthMiddleware {
             const email = req.email as string;
             const user = await usersRepository.getOneByEmail(email);
             if (!user) {
-                next(new ErrorHandler(errorMessageConstants.userNotFound, HttpStatusEnum.NOT_FOUND, HttpMessageEnum.NOT_FOUND));
+                next(
+                    new ErrorHandler(
+                        errorMessageConstants.userNotFound,
+                        HttpStatusEnum.NOT_FOUND,
+                        HttpMessageEnum.NOT_FOUND
+                    )
+                );
                 return;
             }
             req.user = user as IUser;
@@ -79,7 +91,13 @@ class AuthMiddleware {
             const resultAfterChecked = await bcryptService.compare(password, passwordFromDB);
 
             if (!resultAfterChecked) {
-                next(new ErrorHandler(errorMessageConstants.unauthorized, HttpStatusEnum.UNAUTHORIZED, HttpMessageEnum.UNAUTHORIZED));
+                next(
+                    new ErrorHandler(
+                        errorMessageConstants.unauthorized,
+                        HttpStatusEnum.UNAUTHORIZED,
+                        HttpMessageEnum.UNAUTHORIZED
+                    )
+                );
                 return;
             }
             next();
@@ -93,7 +111,13 @@ class AuthMiddleware {
             const authorization = req.get(authConstants.AUTHORIZATION) as string;
 
             if (!authorization) {
-                next(new ErrorHandler(errorMessageConstants.authorization, HttpStatusEnum.BAD_REQUEST, HttpMessageEnum.BAD_REQUEST));
+                next(
+                    new ErrorHandler(
+                        errorMessageConstants.authorization,
+                        HttpStatusEnum.BAD_REQUEST,
+                        HttpMessageEnum.BAD_REQUEST
+                    )
+                );
                 return;
             }
 
@@ -129,10 +153,15 @@ class AuthMiddleware {
             const bearer = authorization.split(' ')[0];
 
             if (bearer !== authConstants.BEARER) {
-                next(new ErrorHandler(errorMessageConstants.authorization, HttpStatusEnum.BAD_REQUEST, HttpMessageEnum.BAD_REQUEST));
+                next(
+                    new ErrorHandler(
+                        errorMessageConstants.authorization,
+                        HttpStatusEnum.BAD_REQUEST,
+                        HttpMessageEnum.BAD_REQUEST
+                    )
+                );
                 return;
             }
-
             next();
         } catch (e) {
             next(e);
@@ -145,7 +174,13 @@ class AuthMiddleware {
             const token = authorization.split(' ')[1];
 
             if (!token) {
-                next(new ErrorHandler(errorMessageConstants.authorization, HttpStatusEnum.BAD_REQUEST, HttpMessageEnum.BAD_REQUEST));
+                next(
+                    new ErrorHandler(
+                        errorMessageConstants.authorization,
+                        HttpStatusEnum.BAD_REQUEST,
+                        HttpMessageEnum.BAD_REQUEST
+                    )
+                );
                 return;
             }
 
@@ -171,7 +206,13 @@ class AuthMiddleware {
             const { userName, id } = jwtService.verify(token) as IPayload;
 
             if (!userName && !id) {
-                next(new ErrorHandler(errorMessageConstants.unauthorized, HttpStatusEnum.UNAUTHORIZED, HttpMessageEnum.UNAUTHORIZED));
+                next(
+                    new ErrorHandler(
+                        errorMessageConstants.unauthorized,
+                        HttpStatusEnum.UNAUTHORIZED,
+                        HttpMessageEnum.UNAUTHORIZED
+                    )
+                );
                 return;
             }
 
@@ -188,7 +229,13 @@ class AuthMiddleware {
             const { userName, id } = jwtService.verify(token, authConstants.REFRESH) as IPayload;
 
             if (!userName || !id) {
-                next(new ErrorHandler(errorMessageConstants.unauthorized, HttpStatusEnum.UNAUTHORIZED, HttpMessageEnum.UNAUTHORIZED));
+                next(
+                    new ErrorHandler(
+                        errorMessageConstants.unauthorized,
+                        HttpStatusEnum.UNAUTHORIZED,
+                        HttpMessageEnum.UNAUTHORIZED
+                    )
+                );
                 return;
             }
 
@@ -205,8 +252,14 @@ class AuthMiddleware {
 
             const keyFromDB = await clientRepository.getKey(key);
 
-            if (!keyFromDB) {
-                next(new ErrorHandler(errorMessageConstants.unauthorized, HttpStatusEnum.UNAUTHORIZED, HttpMessageEnum.UNAUTHORIZED));
+            if (!keyFromDB || !keyFromDB.length) {
+                next(
+                    new ErrorHandler(
+                        errorMessageConstants.unauthorized,
+                        HttpStatusEnum.UNAUTHORIZED,
+                        HttpMessageEnum.UNAUTHORIZED
+                    )
+                );
                 return;
             }
 
@@ -223,7 +276,13 @@ class AuthMiddleware {
             const user = await usersRepository.getOneById(id);
 
             if (!user) {
-                next(new ErrorHandler(errorMessageConstants.userNotFound, HttpStatusEnum.NOT_FOUND, HttpMessageEnum.NOT_FOUND));
+                next(
+                    new ErrorHandler(
+                        errorMessageConstants.userNotFound,
+                        HttpStatusEnum.NOT_FOUND,
+                        HttpMessageEnum.NOT_FOUND
+                    )
+                );
                 return;
             }
 

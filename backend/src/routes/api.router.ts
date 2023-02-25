@@ -3,10 +3,14 @@ import { Request, Response, NextFunction, Router } from 'express';
 import { HttpMessageEnum, HttpStatusEnum } from '../enums';
 import { authRouter } from './auth.router';
 import { ErrorHandler } from '../errors';
+import { mainCommentsRouter } from './main.comments.router';
+import { commentsRouter } from './comments.router';
 
 export const apiRouter = Router();
 
 apiRouter.use('/auth', authRouter);
+apiRouter.use('/mainComments', mainCommentsRouter);
+apiRouter.use('/comments', commentsRouter);
 
 // @ts-ignore
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

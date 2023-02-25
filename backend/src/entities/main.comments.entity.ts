@@ -1,7 +1,8 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
 import { CommonFields } from './commons-fields.entity';
 import { Users } from './users.entity';
+import { Comments } from './comments.entity';
 
 @Entity()
 export class MainComments extends CommonFields {
@@ -47,6 +48,9 @@ export class MainComments extends CommonFields {
         unique: true,
     })
     fileImg?: string;
+
+    @OneToMany(() => Comments, (comment) => comment.mainComments)
+    comments: Comments[];
 
     @ManyToOne(() => Users, (users) => users.mainComments)
     @JoinColumn({ name: 'userId' })

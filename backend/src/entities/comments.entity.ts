@@ -2,6 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 import { CommonFields } from './commons-fields.entity';
 import { Users } from './users.entity';
+import { MainComments } from './main.comments.entity';
 
 @Entity()
 export class Comments extends CommonFields {
@@ -49,4 +50,8 @@ export class Comments extends CommonFields {
     @ManyToOne(() => Users, (users) => users.comments)
     @JoinColumn({ name: 'userId' })
     user: Users;
+
+    @ManyToOne(() => MainComments, (mainComments) => mainComments.comments)
+    @JoinColumn({ name: 'mainCommentId' })
+    mainComments: MainComments;
 }
