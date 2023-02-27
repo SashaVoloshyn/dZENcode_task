@@ -1,6 +1,6 @@
 import { NextFunction } from 'express';
 
-import { IPayload, IRequest, IResponse, ITokenPair, IUser } from '../interfaces';
+import {IPayload, IRequest, IResponse, ITokenPair, IUser} from '../interfaces';
 import { Users } from '../entities';
 import { bcryptService, jwtService, s3Service } from '../services';
 import { clientRepository, usersRepository } from '../repositories';

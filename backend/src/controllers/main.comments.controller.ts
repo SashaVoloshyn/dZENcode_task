@@ -197,6 +197,7 @@ class MainCommentsController {
 
             const mainComments = await mainCommentsRepository.getAllWithPagination(skip, perPage);
 
+
             return res.status(HttpStatusEnum.OK).json({
                 status: HttpStatusEnum.OK,
                 data: mainComments,

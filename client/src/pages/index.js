@@ -1,0 +1,5 @@
+export { Home } from './Home'
+export { MainComments as FullPost } from './FullPost'
+export { AddPost } from './AddPost'
+export { Registration } from './Registration/Registration'
+export { Login } from './Login/Login'
