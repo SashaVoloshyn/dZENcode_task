@@ -14,8 +14,7 @@ import { Navigate } from "react-router-dom";
 export const Registration = () => {
 
   const dispatch = useDispatch()
-  const [avatarBuffer, setAvatarBuffer] = React.useState(null);
-  const { register, handleSubmit, setError, formState: { errors, isValid } } = useForm({
+  const { register, handleSubmit, setError, formState: { errors } } = useForm({
     defaultValues: {
       avatar: "",
       userName:"testName",
@@ -25,29 +24,23 @@ export const Registration = () => {
     mode: "onChange",
   });
 
-  const onSubmit=async (values)=>{
-    const data =  await dispatch(fetchRegister(values));
-    console.log(data);
+  const onSubmit=async (data)=>{
+    const formData = new FormData();
+    formData.append("avatar", data.avatar[0]); // append the avatar file to the form data
+    formData.append("userName", data.userName);
+    formData.append("email", data.email);
+    formData.append("password", data.password);
 
-    console.log(avatarBuffer);
 
-    if (!data.payload) {
+    const userData =  await dispatch(fetchRegister(formData));
+    console.log(userData);
+
+
+    if (!userData.payload) {
       return alert('подивитисб за сет еррор');
     }
-
-    return <Navigate to="/"/>
-
   }
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    console.log(file);
-    const reader = new FileReader();
-    reader.readAsArrayBuffer(file);
-    reader.onload = () => {
-      setAvatarBuffer(reader.result);
-    };
-  };
 
   return (
     <Paper classes={{ root: styles.root }}>
@@ -64,8 +57,8 @@ export const Registration = () => {
         <input {...register("avatar" )}
                className={styles.field}
                type="file"
-               onChange={handleFileChange}
-               fullWidth />
+               accept=".jpg,.png,.jpeg,.gif"
+                />
 
         <TextField className={styles.field} label="Iм'я"
                    error={Boolean(errors.userName?.message)}

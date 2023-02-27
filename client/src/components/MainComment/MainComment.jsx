@@ -9,6 +9,7 @@ import CommentIcon from '@mui/icons-material/ChatBubbleOutlineOutlined'
 import styles from './MainComment.module.scss'
 import { UserInfo } from '../UserInfo'
 import { MainCommentSkeleton } from './Skeleton'
+import {mainConfig} from "../../configs/main.config";
 
 export const MainComment = ({
     id,
@@ -51,7 +52,9 @@ export const MainComment = ({
             <div className={styles.wrapper}>
                 <UserInfo {...user} additionalText={created_at} />
                 <div className={styles.indention}>
+                    {pageUrl ? <a href={`${pageUrl}`}>PageUrl</a> :''}
                     <p
+
                         className={clsx(styles.text, {
                             [styles.textFull]: isFullMainComment
                         })}
@@ -62,6 +65,8 @@ export const MainComment = ({
                             <a href={`/MainComments/${id}`}>{text}</a>
                         )}
                     </p>
+                    {fileImg ? <img  src={`${mainConfig.CLOUD_DOMAIN_NAME}${fileImg}`} alt={fileImg} />
+                        : ''}
                     {children && (
                         <div className={styles.content}>{children}</div>
                     )}
@@ -69,7 +74,7 @@ export const MainComment = ({
                         <li>
                             <CommentIcon
                                 onClick={() =>
-                                    setIsCommented((curva) => !curva)
+                                    setIsCommented((zxc) => !zxc)
                                 }
                             />
                             <span>{commentsCount}</span>
