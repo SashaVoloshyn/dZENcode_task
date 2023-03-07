@@ -1,6 +1,6 @@
 import { NextFunction } from 'express';
 
-import {IPayload, IRequest, IResponse, ITokenPair, IUser} from '../interfaces';
+import { IPayload, IRequest, IResponse, ITokenPair, IUser, IUserRes } from '../interfaces';
 import { Users } from '../entities';
 import { bcryptService, jwtService, s3Service } from '../services';
 import { clientRepository, usersRepository } from '../repositories';
@@ -43,6 +43,7 @@ class AuthController {
                 );
 
                 if (!avatarSaved.Location) {
+                    console.log(`weqewqeweqweqqew`);
                     return res.status(HttpStatusEnum.PARTIAL_CONTENT).json({
                         status: HttpStatusEnum.PARTIAL_CONTENT,
                         data: { ...userDB },
@@ -58,6 +59,7 @@ class AuthController {
                     message: HttpMessageEnum.CREATED,
                 });
             }
+            console.log(`''''''''''''''''''''''''''''''''''''''''''''`);
 
             return res.status(HttpStatusEnum.CREATED).json({
                 status: HttpStatusEnum.CREATED,
@@ -171,6 +173,29 @@ class AuthController {
                     refreshToken,
                     accessToken,
                     clientKey,
+                },
+            });
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    public async checkMeAuth(
+        req: IRequest,
+        res: IResponse<IUserRes>,
+        next: NextFunction
+    ): Promise<IResponse<IUserRes> | undefined> {
+        try {
+            const { id, userName, avatar, email } = req.user as IUserRes;
+
+            return res.status(HttpStatusEnum.OK).json({
+                status: HttpStatusEnum.OK,
+                message: HttpMessageEnum.OK,
+                data: {
+                    id,
+                    userName,
+                    avatar,
+                    email,
                 },
             });
         } catch (e) {

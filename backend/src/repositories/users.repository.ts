@@ -2,7 +2,7 @@ import { UpdateResult } from 'typeorm';
 
 import { AppDataSource } from '../configs';
 import { Users } from '../entities';
-import {IUser } from '../interfaces';
+import { IUser } from '../interfaces';
 
 class UsersRepository {
     userRepository;

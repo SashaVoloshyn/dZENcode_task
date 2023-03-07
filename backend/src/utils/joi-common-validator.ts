@@ -1,4 +1,5 @@
 import Joi from 'joi';
+
 import { regexConstant } from '../constants';
 
 export const joiCommonValidator = {

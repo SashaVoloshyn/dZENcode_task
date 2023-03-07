@@ -1,5 +1,8 @@
-export { Home } from './Home'
-export { MainComments as FullPost } from './FullPost'
-export { AddPost } from './AddPost'
-export { Registration } from './Registration/Registration'
-export { Login } from './Login/Login'
+export { HomePage } from './HomePage/HomePage'
+export { RegistrationPage } from './RegistrationPage/RegistrationPage'
+export { LoginPage } from './LoginPage/LoginPage'
+export { AddMainCommentPage } from './AddMainCommentPage/AddMainCommentPage'
+export * from './MainCommentsPage/MainCommentsPage';
+export * from './MainCommentsPageEmail/MainCommentsPageEmail';
+export * from './MainCommentsPageUserName/MainCommentsPageUserName';
+

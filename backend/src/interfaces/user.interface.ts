@@ -5,11 +5,10 @@ export interface IUser {
     avatar?: string;
 }
 
-export interface IUserRes{
-    id: number
+export interface IUserRes {
+    id: number;
     userName: string;
     email: string;
     password?: string;
     avatar?: string;
-
 }

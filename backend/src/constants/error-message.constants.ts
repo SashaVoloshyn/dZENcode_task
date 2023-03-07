@@ -15,11 +15,11 @@ export const errorMessageConstants = {
 export const errorValidationMessageConst = {
     'string.empty': 'Поле не може бути пустим',
     'string.base': 'Поле повинно бути текстом',
-    'string.min': 'Довжина поля повинна бути не менше {#limit} символів',
+    'string.min': 'Довжина поля повинна бути не меньше {#limit} символів',
     'string.max': 'Довжина поля повинна бути не більше {#limit} символів',
     'any.required': "Поле є обов'язковим",
     'number.base': ' Поле має бути числом',
     'number.empty': 'Поле не може бути пустим',
     'number.min': 'мінімальне число {#limit}',
-    'number.max': 'мінімальне число {#limit}',
+    'number.max': 'максимальне число {#limit}',
 };

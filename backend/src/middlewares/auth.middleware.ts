@@ -28,6 +28,7 @@ class AuthMiddleware {
     public async checkUserIsUniq(req: IRequest, _: Response, next: NextFunction): Promise<void> {
         try {
             const { email } = req.user as IUser;
+
             const user = await usersRepository.getOneByEmail(email);
 
             if (user) {
@@ -152,6 +153,7 @@ class AuthMiddleware {
             const authorization = req.authorization as string;
             const bearer = authorization.split(' ')[0];
 
+
             if (bearer !== authConstants.BEARER) {
                 next(
                     new ErrorHandler(
@@ -217,6 +219,8 @@ class AuthMiddleware {
             }
 
             req.payload = { userName, id };
+
+            console.log(req.payload);
             next();
         } catch (e) {
             next(e);
@@ -226,6 +230,7 @@ class AuthMiddleware {
     public async verifyRefreshToken(req: IRequest, _: Response, next: NextFunction): Promise<void> {
         try {
             const token = req.authorization as string;
+            console.log(token)
             const { userName, id } = jwtService.verify(token, authConstants.REFRESH) as IPayload;
 
             if (!userName || !id) {

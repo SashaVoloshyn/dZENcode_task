@@ -1,0 +1,19 @@
+.nav {
+    color: black;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin: 6px 0;
+    a {
+        color: black;
+        font-weight: bolder;
+    }
+    & .tab {
+        height: 10px;
+    }
+}
+
+.nav a[class='active'] {
+    color: #4361ee;
+    border-bottom: 3px solid#4361ee;
+}

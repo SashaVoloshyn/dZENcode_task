@@ -34,6 +34,16 @@ authRouter.post(
     authController.logout
 );
 
+authRouter.get(
+    '/me',
+    authMiddleware.authorization,
+    authMiddleware.checkAuthorizationOnBearer,
+    authMiddleware.validateAuthorizationToken,
+    authMiddleware.verifyAccessToken,
+    authMiddleware.checkUserAuthByPayload,
+    authController.checkMeAuth
+);
+
 authRouter.post(
     '/refresh',
     authMiddleware.authorization,

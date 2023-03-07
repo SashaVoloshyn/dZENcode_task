@@ -197,6 +197,57 @@ class MainCommentsController {
 
             const mainComments = await mainCommentsRepository.getAllWithPagination(skip, perPage);
 
+            return res.status(HttpStatusEnum.OK).json({
+                status: HttpStatusEnum.OK,
+                data: mainComments,
+                message: HttpMessageEnum.OK,
+            });
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    public async getAllOfUserNameWithPagination(
+        req: IRequest,
+        res: IResponse<[MainComments[], number]>,
+        next: NextFunction
+    ): Promise<IResponse<[MainComments[], number]> | undefined> {
+        try {
+            let page = Number(req.pagination?.page);
+            let perPage = Number(req.pagination?.perPage);
+
+            if (!page) page = 1;
+            if (!perPage) perPage = 25;
+
+            const skip = paginationService.createSkip(page, perPage);
+
+            const mainComments = await mainCommentsRepository.getAllOfUserNameWithPagination(skip, perPage);
+
+            return res.status(HttpStatusEnum.OK).json({
+                status: HttpStatusEnum.OK,
+                data: mainComments,
+                message: HttpMessageEnum.OK,
+            });
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    public async getAllOfUserEmailWithPagination(
+        req: IRequest,
+        res: IResponse<[MainComments[], number]>,
+        next: NextFunction
+    ): Promise<IResponse<[MainComments[], number]> | undefined> {
+        try {
+            let page = Number(req.pagination?.page);
+            let perPage = Number(req.pagination?.perPage);
+
+            if (!page) page = 1;
+            if (!perPage) perPage = 25;
+
+            const skip = paginationService.createSkip(page, perPage);
+
+            const mainComments = await mainCommentsRepository.getAllOfUserEmailWithPagination(skip, perPage);
 
             return res.status(HttpStatusEnum.OK).json({
                 status: HttpStatusEnum.OK,

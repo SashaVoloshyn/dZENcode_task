@@ -33,6 +33,31 @@ class MainCommentsRepository {
             .leftJoinAndSelect('mainComments.comments', 'comments')
             .leftJoin('mainComments.user', 'user')
             .select(['mainComments', 'comments', 'user.id', 'user.userName', 'user.email', 'user.avatar'])
+            .orderBy('mainComments.id', 'DESC')
+            .skip(skip)
+            .take(take)
+            .getManyAndCount();
+    }
+
+    public async getAllOfUserNameWithPagination(skip: number, take: number): Promise<[MainComments[], number]> {
+        return this.mainCommentsRepository
+            .createQueryBuilder('mainComments')
+            .leftJoinAndSelect('mainComments.comments', 'comments')
+            .leftJoin('mainComments.user', 'user')
+            .select(['mainComments', 'comments', 'user.id', 'user.userName', 'user.email', 'user.avatar'])
+            .orderBy('user.userName', 'ASC')
+            .skip(skip)
+            .take(take)
+            .getManyAndCount();
+    }
+
+    public async getAllOfUserEmailWithPagination(skip: number, take: number): Promise<[MainComments[], number]> {
+        return this.mainCommentsRepository
+            .createQueryBuilder('mainComments')
+            .leftJoinAndSelect('mainComments.comments', 'comments')
+            .leftJoin('mainComments.user', 'user')
+            .select(['mainComments', 'comments', 'user.id', 'user.userName', 'user.email', 'user.avatar'])
+            .orderBy('user.email', 'ASC')
             .skip(skip)
             .take(take)
             .getManyAndCount();
