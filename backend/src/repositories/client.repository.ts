@@ -7,9 +7,9 @@ class ClientRepository {
     client;
 
     constructor() {
-        this.client = createClient();
+        this.client = createClient({ socket: { connectTimeout: 20000 } });
         (async () => {
-            await this.client.connect();
+            await this.client.connect().catch((e) => console.error(e));
         })();
     }
 

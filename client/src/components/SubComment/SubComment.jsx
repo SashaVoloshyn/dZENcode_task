@@ -10,14 +10,17 @@ import styles from './SubComment.module.scss'
 import { mainConfig } from '../../configs/main.config'
 
 const SubComment = ({
-    comment: { created_at, userId, id, text, fileImg, fileText },
+    comment: { created_at, user, id, text, fileImg, fileText },
     isEditable
 }) => {
     const { mainComments } = useSelector((state) => state.mainComments)
+    console.log(mainComments);
 
-    const user = mainComments.items[0].filter(
-        (main) => main.user.id === userId
-    )[0].user
+    // const user = mainComments.items[0].filter(
+    //     (main) => main.user.id === userId
+    // )[0].user
+
+
 
     return (
         <div className={clsx(styles.root)}>

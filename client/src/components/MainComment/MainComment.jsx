@@ -17,6 +17,7 @@ import {
     AddSubComment,
     AddSubCommentBtns
 } from '../AddSubComment/AddSubComment'
+import {Link} from "react-router-dom";
 
 export const MainComment = ({
     id,
@@ -68,11 +69,11 @@ export const MainComment = ({
             >
                 {isEditable && (
                     <div className={styles.editButtons}>
-                        <a href={`/MainComments/${id}/edit`}>
+                        <Link to={`/MainComments/${id}/edit`}>
                             <IconButton color="primary">
                                 <EditIcon />
                             </IconButton>
-                        </a>
+                        </Link>
                         <IconButton onClick={onClickRemove} color="secondary">
                             <DeleteIcon />
                         </IconButton>

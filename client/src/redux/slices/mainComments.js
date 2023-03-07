@@ -51,6 +51,7 @@ const mainCommentsSlice = createSlice({
     },
     [fetchMainComments.fulfilled]: (state, actions) => {
       state.mainComments.items = actions.payload.data;
+      console.log(state.mainComments.items);
       state.mainComments.status = "loaded"
     },
     [fetchMainComments.rejected]: (state) => {

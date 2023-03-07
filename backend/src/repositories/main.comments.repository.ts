@@ -27,12 +27,25 @@ class MainCommentsRepository {
             .getMany();
     }
 
+        // public async getAllWithPagination(skip: number, take: number): Promise<[MainComments[], number]> {
+        //     return this.mainCommentsRepository
+        //         .createQueryBuilder('mainComments')
+        //         .leftJoinAndSelect('mainComments.comments', 'comments')
+        //         .leftJoin('mainComments.user', 'user')
+        //         .select(['mainComments','comments', 'user.id', 'user.userName', 'user.email', 'user.avatar'])
+        //         .orderBy('mainComments.id', 'DESC')
+        //         .skip(skip)
+        //         .take(take)
+        //         .getManyAndCount();
+        // }
+
     public async getAllWithPagination(skip: number, take: number): Promise<[MainComments[], number]> {
         return this.mainCommentsRepository
             .createQueryBuilder('mainComments')
             .leftJoinAndSelect('mainComments.comments', 'comments')
-            .leftJoin('mainComments.user', 'user')
-            .select(['mainComments', 'comments', 'user.id', 'user.userName', 'user.email', 'user.avatar'])
+            .leftJoin('comments.user', 'user') // добавили связь с таблицей user через comments
+            .leftJoin('mainComments.user', 'mainCommentsUser') // добавили связь с таблицей user через mainComments
+            .select(['mainComments','comments', 'mainCommentsUser.id', 'mainCommentsUser.userName', 'mainCommentsUser.email', 'mainCommentsUser.avatar', 'user.id', 'user.userName', 'user.email', 'user.avatar']) // включили свойства user из таблицы comments и mainComments
             .orderBy('mainComments.id', 'DESC')
             .skip(skip)
             .take(take)
