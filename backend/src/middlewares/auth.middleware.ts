@@ -153,7 +153,6 @@ class AuthMiddleware {
             const authorization = req.authorization as string;
             const bearer = authorization.split(' ')[0];
 
-
             if (bearer !== authConstants.BEARER) {
                 next(
                     new ErrorHandler(
@@ -230,7 +229,7 @@ class AuthMiddleware {
     public async verifyRefreshToken(req: IRequest, _: Response, next: NextFunction): Promise<void> {
         try {
             const token = req.authorization as string;
-            console.log(token)
+            console.log(token);
             const { userName, id } = jwtService.verify(token, authConstants.REFRESH) as IPayload;
 
             if (!userName || !id) {

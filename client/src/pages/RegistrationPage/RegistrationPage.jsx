@@ -21,8 +21,8 @@ export const RegistrationPage = () => {
 
     const {register, handleSubmit, formState: {errors}} = useForm({
         defaultValues: {
-            userName: "Sashok",
-            email: "sassha@sasha.com",
+            userName: "hello",
+            email: "hello@lo.com",
             password: "qwertY123654789"
         },
         mode: "onTouched",
@@ -32,7 +32,7 @@ export const RegistrationPage = () => {
 
     const onSubmit = async (data) => {
         const formData = new FormData();
-        formData.append("avatar", data.avatar[0]);
+        data.avatar[0] && formData.append("avatar", data.avatar[0]);
         formData.append("userName", data.userName);
         formData.append("email", data.email);
         formData.append("password", data.password);
@@ -62,10 +62,13 @@ export const RegistrationPage = () => {
                         sx={{width: 100, height: 100}}/>
 
                 </div>
+                <label className={styles.castomLabel} htmlFor="avatar">Додати аватар</label>
                 <input {...register("avatar")}
                        className={styles.field}
                        type="file"
                        accept=".jpg,.png,.jpeg"
+                       id="avatar"
+                       hidden={true}
 
                 />
 
@@ -86,7 +89,7 @@ export const RegistrationPage = () => {
                            helperText={errors.password && <span>{errors.password?.message}</span>}
                            {...register("password", {required: "Вкажіть пароль"})}
                            fullWidth/>
-                <Button type="submit" size="large" variant="contained">
+                <Button type="submit" size="large" variant="contained" fullWidth>
                     Зареєструватися
                 </Button>
             </form>

@@ -12,7 +12,7 @@ export const RegistrationValidator = Joi.object({
 
 
 export const LoginValidator = Joi.object({
-    email: joiCommonValidator.email.required().trim().messages(errorValidationMessageConst),
+    email: joiCommonValidator.email.required().trim(),
     password: joiCommonValidator.password.required().trim().messages(errorValidationMessageConst)
 });
 

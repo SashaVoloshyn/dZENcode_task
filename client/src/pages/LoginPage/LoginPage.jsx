@@ -22,7 +22,7 @@ export const LoginPage = () => {
     } = useForm({
         defaultValues: {
             email: 'hello@lo.com',
-            password: '1234567'
+            password: 'qwertY123654789'
         },
         mode: 'onTouched',
         resolver: joiResolver(LoginValidator)
@@ -31,9 +31,6 @@ export const LoginPage = () => {
     const onSubmit = async (values) => {
         const data = await dispatch(fetchLogin(values))
 
-        if (!data.payload) {
-            return alert('Не вдалось авторизуватись')
-        }
         if (
             'accessToken' in data.payload.data &&
             'clientKey' in data.payload.data
@@ -91,6 +88,7 @@ export const LoginPage = () => {
                     type="submit"
                     size="large"
                     variant="contained"
+                    fullWidth
                 >
                     Увійти
                 </Button>

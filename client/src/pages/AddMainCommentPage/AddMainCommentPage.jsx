@@ -142,23 +142,24 @@ export const AddMainCommentPage = () => {
                     onChange={(e) => setFormText(e.target.value)}
                 />
                 <div className={styles.upload}>
+                    <label htmlFor="fileImg">Виберіть зображення</label>
                     <input
                         {...register('fileImg')}
                         type="file"
                         accept=".jpg,.png,.jpeg,.gif"
                         defaultValue={null}
+                        id="fileImg"
+                        hidden={true}
                     />
+                    <label htmlFor="fileText">Виберіть .txt файл</label>
                     <input
                         {...register('fileText')}
                         type="file"
                         accept=".txt"
                         defaultValue={null}
+                        id="fileText"
+                        hidden={true}
                     />
-                    {/* <Button onClick={() => inputImgRef.current.click()}
-                            variant="outlined" size="large"> Додати зображення </Button>
-
-                    <Button onClick={() => inputTextRef.current.click()}
-                            variant="outlined" size="large">Додати текстовий файл </Button>*/}
                 </div>
 
                 <div>{/*  <LoadCanvasTemplate /> */}</div>

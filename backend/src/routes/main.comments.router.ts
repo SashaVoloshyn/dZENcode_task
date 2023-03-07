@@ -10,9 +10,17 @@ const filesUpload = textPhotoFields();
 
 mainCommentsRouter.get('/', paginationMiddleware.checkQuery, mainCommentsController.getAllWithPagination);
 
-mainCommentsRouter.get('/userName', paginationMiddleware.checkQuery, mainCommentsController.getAllOfUserNameWithPagination);
+mainCommentsRouter.get(
+    '/userName',
+    paginationMiddleware.checkQuery,
+    mainCommentsController.getAllOfUserNameWithPagination
+);
 
-mainCommentsRouter.get('/userEmail', paginationMiddleware.checkQuery, mainCommentsController.getAllOfUserEmailWithPagination);
+mainCommentsRouter.get(
+    '/userEmail',
+    paginationMiddleware.checkQuery,
+    mainCommentsController.getAllOfUserEmailWithPagination
+);
 
 mainCommentsRouter.get('/:id', paginationMiddleware.checkParamsId, mainCommentsController.getOneById);
 

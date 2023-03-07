@@ -27,25 +27,24 @@ class MainCommentsRepository {
             .getMany();
     }
 
-        // public async getAllWithPagination(skip: number, take: number): Promise<[MainComments[], number]> {
-        //     return this.mainCommentsRepository
-        //         .createQueryBuilder('mainComments')
-        //         .leftJoinAndSelect('mainComments.comments', 'comments')
-        //         .leftJoin('mainComments.user', 'user')
-        //         .select(['mainComments','comments', 'user.id', 'user.userName', 'user.email', 'user.avatar'])
-        //         .orderBy('mainComments.id', 'DESC')
-        //         .skip(skip)
-        //         .take(take)
-        //         .getManyAndCount();
-        // }
-
     public async getAllWithPagination(skip: number, take: number): Promise<[MainComments[], number]> {
         return this.mainCommentsRepository
             .createQueryBuilder('mainComments')
             .leftJoinAndSelect('mainComments.comments', 'comments')
-            .leftJoin('comments.user', 'user') // добавили связь с таблицей user через comments
-            .leftJoin('mainComments.user', 'mainCommentsUser') // добавили связь с таблицей user через mainComments
-            .select(['mainComments','comments', 'mainCommentsUser.id', 'mainCommentsUser.userName', 'mainCommentsUser.email', 'mainCommentsUser.avatar', 'user.id', 'user.userName', 'user.email', 'user.avatar']) // включили свойства user из таблицы comments и mainComments
+            .leftJoin('comments.user', 'user')
+            .leftJoin('mainComments.user', 'mainCommentsUser')
+            .select([
+                'mainComments',
+                'comments',
+                'mainCommentsUser.id',
+                'mainCommentsUser.userName',
+                'mainCommentsUser.email',
+                'mainCommentsUser.avatar',
+                'user.id',
+                'user.userName',
+                'user.email',
+                'user.avatar',
+            ])
             .orderBy('mainComments.id', 'DESC')
             .skip(skip)
             .take(take)
@@ -56,9 +55,21 @@ class MainCommentsRepository {
         return this.mainCommentsRepository
             .createQueryBuilder('mainComments')
             .leftJoinAndSelect('mainComments.comments', 'comments')
-            .leftJoin('mainComments.user', 'user')
-            .select(['mainComments', 'comments', 'user.id', 'user.userName', 'user.email', 'user.avatar'])
-            .orderBy('user.userName', 'ASC')
+            .leftJoin('comments.user', 'user')
+            .leftJoin('mainComments.user', 'mainCommentsUser')
+            .select([
+                'mainComments',
+                'comments',
+                'mainCommentsUser.id',
+                'mainCommentsUser.userName',
+                'mainCommentsUser.email',
+                'mainCommentsUser.avatar',
+                'user.id',
+                'user.userName',
+                'user.email',
+                'user.avatar',
+            ])
+            .orderBy('mainCommentsUser.userName', 'ASC')
             .skip(skip)
             .take(take)
             .getManyAndCount();
@@ -68,9 +79,21 @@ class MainCommentsRepository {
         return this.mainCommentsRepository
             .createQueryBuilder('mainComments')
             .leftJoinAndSelect('mainComments.comments', 'comments')
-            .leftJoin('mainComments.user', 'user')
-            .select(['mainComments', 'comments', 'user.id', 'user.userName', 'user.email', 'user.avatar'])
-            .orderBy('user.email', 'ASC')
+            .leftJoin('comments.user', 'user')
+            .leftJoin('mainComments.user', 'mainCommentsUser')
+            .select([
+                'mainComments',
+                'comments',
+                'mainCommentsUser.id',
+                'mainCommentsUser.userName',
+                'mainCommentsUser.email',
+                'mainCommentsUser.avatar',
+                'user.id',
+                'user.userName',
+                'user.email',
+                'user.avatar',
+            ])
+            .orderBy('mainCommentsUser.email', 'ASC')
             .skip(skip)
             .take(take)
             .getManyAndCount();

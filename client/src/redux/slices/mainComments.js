@@ -32,6 +32,18 @@ export const fetchMainCommentsUserName = createAsyncThunk("mainComments/fetchMai
 
 });
 
+export const fetchMainCommentsUserEmail = createAsyncThunk("mainComments/fetchMainCommentsUserEmail",
+    async (_,{rejectWithValue}) => {
+      try {
+        const { data } = await axios.get("/mainComments/userEmail");
+        return data;
+
+      }catch (e) {
+        return rejectWithValue(e.response.data.message)
+      }
+
+    });
+
 const initialState = {
   mainComments: {
     item: null,
@@ -70,7 +82,36 @@ const mainCommentsSlice = createSlice({
     [fetchCreateMainComments.rejected]: (state) => {
       state.mainComments.item = null;
       state.mainComments.status = "error";
-    }
+    },
+
+    [fetchMainCommentsUserName.pending]: (state) => {
+      state.mainComments.items = [];
+      state.mainComments.status = "loading";
+    },
+    [fetchMainCommentsUserName.fulfilled]: (state, actions) => {
+      state.mainComments.items = actions.payload.data;
+      console.log(state.mainComments.items);
+      state.mainComments.status = "loaded"
+    },
+    [fetchMainCommentsUserName.rejected]: (state) => {
+      state.mainComments.items = [];
+      state.mainComments.status = "error";
+    },
+
+    [fetchMainCommentsUserEmail.pending]: (state) => {
+      state.mainComments.items = [];
+      state.mainComments.status = "loading";
+    },
+    [fetchMainCommentsUserEmail.fulfilled]: (state, actions) => {
+      state.mainComments.items = actions.payload.data;
+      console.log(state.mainComments.items);
+      state.mainComments.status = "loaded"
+    },
+    [fetchMainCommentsUserEmail.rejected]: (state) => {
+      state.mainComments.items = [];
+      state.mainComments.status = "error";
+    },
+
   }
 
 });
