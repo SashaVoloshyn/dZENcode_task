@@ -5,6 +5,9 @@ import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchCreateMainComments } from '../../redux/slices/mainComments'
 import { useNavigate } from 'react-router-dom'
+import {joiResolver} from "@hookform/resolvers/joi";
+import {MainCommentCreateValidator} from "../../utils";
+
 export const AddMainCommentPage = () => {
     const [formText, setFormText] = useState('')
     const [helperText, setHelperText] = useState('')
@@ -66,11 +69,12 @@ export const AddMainCommentPage = () => {
         }
     }
 
-    const { register, handleSubmit } = useForm({
+    const { register, handleSubmit,reset, formState: {errors}} = useForm({
         defaultValues: {
             text: ''
         },
-        mode: 'onChange'
+        mode: 'onChange',
+        resolver: joiResolver(MainCommentCreateValidator),
     })
 
     const { userData } = useSelector((state) => state.auth)
@@ -96,9 +100,13 @@ export const AddMainCommentPage = () => {
         )
 
         console.log(mainCommentData)
+        reset();
 
-        if (!mainCommentData.payload) {
-            return alert('не вдалось відправити коментар')
+
+
+        if (typeof mainCommentData.payload === "string") {
+            return alert(mainCommentData.payload)
+
         } else {
             navigate('/')
         }
@@ -111,10 +119,11 @@ export const AddMainCommentPage = () => {
             </Typography>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <TextField
-                    {...register('pageUrl')}
+                    error={Boolean(errors.pageUrl?.message)}
+                    helperText={errors.pageUrl && <span>{errors.pageUrl?.message}</span>}
+                    {...register('pageUrl',{required: "Додайте URL"})}
                     className={styles.field}
-                    label="HomePage page"
-                    helperText={''}
+                    label="HomePage URL"
                     fullWidth
                 />
                 <div className={styles.tags}>
@@ -129,14 +138,14 @@ export const AddMainCommentPage = () => {
                     ))}
                 </div>
                 <TextField
-                    {...register('text')}
+                    error={Boolean(errors.text?.message)}
+                    helperText={errors.text && <span>{errors.text?.message}</span>}
+                    {...register("text", {required: "Напишіть комментар"})}
                     className={styles.field}
                     fullWidth
                     multiline
                     rows={5}
-                    label={'Comment'}
-                    helperText={helperText}
-                    error={!!helperText}
+                    label={'Комментар'}
                     id="myTextArea"
                     value={formText}
                     onChange={(e) => setFormText(e.target.value)}

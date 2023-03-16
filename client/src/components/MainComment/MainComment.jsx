@@ -113,7 +113,8 @@ export const MainComment = ({
                                     }
                                 }}
                             >
-                                <CommentIcon />
+                                <p>Комментарі</p>
+                                <CommentIcon/>
                                 {!!comments?.length ? (
                                     <span>{comments.length}</span>
                                 ) : (
@@ -126,6 +127,7 @@ export const MainComment = ({
                                     setIsAdding((cuur) => !cuur)
                                 }}
                             >
+                                <p>Додати комментар</p>
                                 <AddCommentIcon />
                             </li>
                             {!!fileText && (

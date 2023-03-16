@@ -1,17 +1,30 @@
 import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {fetchMainCommentsUserName} from "../../redux/slices/mainComments";
+import {fetchMainCommentsUserName, getPage} from "../../redux/slices/mainComments";
 import {MainComment} from "../../components";
+import {useSearchParams} from "react-router-dom";
+import Paginator from "../../components/Paginator/Paginator";
 
 const MainCommentsPageUserName = () => {
     const dispatch = useDispatch()
     const { mainComments } = useSelector((state) => state.mainComments)
 
+    const [searchParams, setSearchParams] = useSearchParams();
+
     const isMainCommentsLoading = mainComments.status === 'loading'
+
     const isMainCommentsError = mainComments.status === 'error'
 
     React.useEffect(() => {
-        dispatch(fetchMainCommentsUserName())
+        if (!searchParams.get('page') || searchParams.get('page') <=0 ) {
+            setSearchParams({page: '1'})
+        }
+
+        const page = searchParams.get('page');
+
+        dispatch(getPage({page}));
+
+        dispatch(fetchMainCommentsUserName(page))
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -39,6 +52,7 @@ const MainCommentsPageUserName = () => {
                     />
                 )
             )}
+            <Paginator/>
         </>
     )
 };

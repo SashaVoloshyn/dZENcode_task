@@ -16,3 +16,11 @@ export const LoginValidator = Joi.object({
     password: joiCommonValidator.password.required().trim().messages(errorValidationMessageConst)
 });
 
+export const MainCommentCreateValidator=Joi.object({
+    text:joiCommonValidator.text.required().trim().messages(errorValidationMessageConst),
+    pageUrl: joiCommonValidator.pageUrl.messages(errorValidationMessageConst),
+    fileImg: Joi.optional().messages(errorValidationMessageConst),
+    fileText: Joi.optional().messages(errorValidationMessageConst)
+
+})
+

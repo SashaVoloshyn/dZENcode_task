@@ -2,8 +2,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import axios from "../../axios";
 
-export const  fetchMainComments = createAsyncThunk("mainComments/fetchMainComments", async () => {
-  const { data } = await axios.get("/mainComments");
+export const  fetchMainComments = createAsyncThunk("mainComments/fetchMainComments", async (page) => {
+  const { data } = await axios.get("/mainComments", {params:{page}});
   return data;
 
 });
@@ -21,9 +21,9 @@ export const fetchCreateMainComments = createAsyncThunk("mainComments/fetchCreat
 });
 
 export const fetchMainCommentsUserName = createAsyncThunk("mainComments/fetchMainCommentsUserName",
-    async (_,{rejectWithValue}) => {
+    async (page,{rejectWithValue}) => {
   try {
-    const { data } = await axios.get("/mainComments/userName");
+    const { data } = await axios.get("/mainComments/userName",{params:{page}});
     return data;
 
   }catch (e) {
@@ -33,9 +33,9 @@ export const fetchMainCommentsUserName = createAsyncThunk("mainComments/fetchMai
 });
 
 export const fetchMainCommentsUserEmail = createAsyncThunk("mainComments/fetchMainCommentsUserEmail",
-    async (_,{rejectWithValue}) => {
+    async (page,{rejectWithValue}) => {
       try {
-        const { data } = await axios.get("/mainComments/userEmail");
+        const { data } = await axios.get("/mainComments/userEmail",{params:{page}});
         return data;
 
       }catch (e) {
@@ -46,6 +46,8 @@ export const fetchMainCommentsUserEmail = createAsyncThunk("mainComments/fetchMa
 
 const initialState = {
   mainComments: {
+    itemsCount:0,
+    currentPage:1,
     item: null,
     items: [],
     status: "loading"
@@ -55,7 +57,12 @@ const initialState = {
 const mainCommentsSlice = createSlice({
   name: "mainComments",
   initialState,
-  reducers: {},
+  reducers: {
+    getPage: (state, action)=>{
+      state.mainComments.currentPage=action.payload.page
+      console.log(state.mainComments.currentPage)
+    }
+  },
   extraReducers: {
     [fetchMainComments.pending]: (state) => {
       state.mainComments.items = [];
@@ -63,7 +70,7 @@ const mainCommentsSlice = createSlice({
     },
     [fetchMainComments.fulfilled]: (state, actions) => {
       state.mainComments.items = actions.payload.data;
-      console.log(state.mainComments.items);
+      state.mainComments.itemsCount = actions.payload.data[1];
       state.mainComments.status = "loaded"
     },
     [fetchMainComments.rejected]: (state) => {
@@ -115,6 +122,8 @@ const mainCommentsSlice = createSlice({
   }
 
 });
+
+export const {getPage} = mainCommentsSlice.actions;
 
 
 export const mainCommentsReducer = mainCommentsSlice.reducer;

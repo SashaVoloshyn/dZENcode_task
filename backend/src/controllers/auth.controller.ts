@@ -43,7 +43,6 @@ class AuthController {
                 );
 
                 if (!avatarSaved.Location) {
-                    console.log(`weqewqeweqweqqew`);
                     return res.status(HttpStatusEnum.PARTIAL_CONTENT).json({
                         status: HttpStatusEnum.PARTIAL_CONTENT,
                         data: { ...userDB },
@@ -59,7 +58,6 @@ class AuthController {
                     message: HttpMessageEnum.CREATED,
                 });
             }
-            console.log(`''''''''''''''''''''''''''''''''''''''''''''`);
 
             return res.status(HttpStatusEnum.CREATED).json({
                 status: HttpStatusEnum.CREATED,
