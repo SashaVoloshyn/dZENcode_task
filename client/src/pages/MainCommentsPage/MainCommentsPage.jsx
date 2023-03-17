@@ -23,7 +23,9 @@ const MainCommentsPage = () => {
             setSearchParams({page: '1'})
         }
 
+        searchParams.set('sort','DESC')
         const page = searchParams.get('page');
+            console.log(searchParams.get('sort'))
 
         dispatch(getPage({page}));
 
@@ -43,6 +45,7 @@ const MainCommentsPage = () => {
                     <MainComment key={index} isLoading={true} />
                 ) : (
                     <MainComment
+                        dispatch={dispatch}
                         key={index}
                         pageUrl={obj.pageUrl}
                         fileImg={obj.fileImg}

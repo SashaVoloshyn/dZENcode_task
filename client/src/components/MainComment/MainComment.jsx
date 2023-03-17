@@ -18,9 +18,11 @@ import {
     AddSubCommentBtns
 } from '../AddSubComment/AddSubComment'
 import {Link} from "react-router-dom";
+import {deleteMainComments} from "../../redux/slices/mainComments";
 
 export const MainComment = ({
     id,
+                                dispatch,
     text,
     created_at,
     fileImg,
@@ -37,7 +39,13 @@ export const MainComment = ({
     if (isLoading) {
         return <MainCommentSkeleton />
     }
-    const onClickRemove = () => {}
+
+
+    const onClickRemove =() => {
+        const clientKey = window.localStorage.getItem('clientKey');
+          dispatch(deleteMainComments(clientKey))
+
+    }
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const [haveSubcomments, setHaveSubComments] = useState(false)
@@ -82,6 +90,7 @@ export const MainComment = ({
                 <div className={styles.wrapper}>
                     <UserInfo {...user} additionalText={created_at} />
                     <div className={styles.indention}>
+                        <p>{created_at}</p>
                         {pageUrl ? <a href={`${pageUrl}`}>PageUrl</a> : ''}
                         <p
                             className={clsx(styles.text, {

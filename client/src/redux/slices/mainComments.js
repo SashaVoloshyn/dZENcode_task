@@ -44,6 +44,18 @@ export const fetchMainCommentsUserEmail = createAsyncThunk("mainComments/fetchMa
 
     });
 
+export const deleteMainComments = createAsyncThunk("mainComments/deleteMainComments",
+    async (params,{rejectWithValue}) => {
+      try {
+        const {data} = await axios.delete("/mainComments", params);
+        return data;
+
+      }catch (e) {
+        return rejectWithValue(e.response.data.message)
+
+      }
+    });
+
 const initialState = {
   mainComments: {
     itemsCount:0,
@@ -116,6 +128,18 @@ const mainCommentsSlice = createSlice({
     },
     [fetchMainCommentsUserEmail.rejected]: (state) => {
       state.mainComments.items = [];
+      state.mainComments.status = "error";
+    },
+
+    [deleteMainComments.pending]: (state) => {
+      state.mainComments.item = null;
+      state.mainComments.status = "loading";
+    },
+    [deleteMainComments.fulfilled]: (state, actions) => {
+      state.mainComments.status = "loaded";
+    },
+    [deleteMainComments.rejected]: (state) => {
+      state.mainComments.item = null;
       state.mainComments.status = "error";
     },
 
