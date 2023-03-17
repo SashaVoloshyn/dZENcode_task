@@ -27,7 +27,7 @@ const MainCommentsPageEmail = () => {
 
         dispatch(fetchMainCommentsUserEmail(page))
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [searchParams])
+    }, [searchParams,mainComments.item])
 
     const isAuth = useSelector((state) => state.auth.data)
     return (
@@ -40,6 +40,7 @@ const MainCommentsPageEmail = () => {
                     <MainComment key={index} isLoading={true} />
                 ) : (
                     <MainComment
+                        dispatch={dispatch}
                         key={index}
                         pageUrl={obj.pageUrl}
                         fileImg={obj.fileImg}

@@ -40,6 +40,7 @@ export const AddMainCommentPage = () => {
         const openingTags = []
         const closingTags = []
         const regex = /<\/?(a|code|i|strong)(?:\s+[^>]*|\s*)?>/gi
+        // const regex = /<([a-zA-Zа-яА-ЯёЁ]+)[^>]*>(.*?)<\/\1>|<(i|strong|code)[^>]*>(.*?)<\/\3>|<a[^>]*href\s*=\s*"[^"]*"[^>]*>(.*?)<\/a>|<(i|strong|code|a)[^>]*\/?>/gui;
 
         let match
         while ((match = regex.exec(formText))) {

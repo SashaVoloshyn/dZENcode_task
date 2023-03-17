@@ -26,7 +26,7 @@ const MainCommentsPageUserName = () => {
 
         dispatch(fetchMainCommentsUserName(page))
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [searchParams,mainComments.item])
 
     const isAuth = useSelector((state) => state.auth.data)
     return (
@@ -39,6 +39,7 @@ const MainCommentsPageUserName = () => {
                     <MainComment key={index} isLoading={true} />
                 ) : (
                     <MainComment
+                        dispatch={dispatch}
                         key={index}
                         pageUrl={obj.pageUrl}
                         fileImg={obj.fileImg}

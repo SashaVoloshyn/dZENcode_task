@@ -41,10 +41,12 @@ export const MainComment = ({
     }
 
 
-    const onClickRemove =() => {
+    const onClickRemove = async () => {
         const clientKey = window.localStorage.getItem('clientKey');
-          dispatch(deleteMainComments(clientKey))
-
+        const confirmation = window.confirm('Ви дійсно хочете видалити комментар?');
+        if (confirmation) {
+            await dispatch(deleteMainComments({id,clientKey}));
+        }
     }
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -66,7 +68,7 @@ export const MainComment = ({
         }
     }
 
-    let test = ReactHtmlParser(text)
+    let htmlText = ReactHtmlParser(text)
 
     return (
         <div>
@@ -98,7 +100,7 @@ export const MainComment = ({
                             })}
                         ></p>
 
-                        <div>{test}</div>
+                        <div>{htmlText}</div>
                         {fileImg ? (
                             <img
                                 className={styles.image}

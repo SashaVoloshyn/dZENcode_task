@@ -21,18 +21,23 @@ const MainCommentsPage = () => {
     React.useEffect(() => {
         if (!searchParams.get('page') || searchParams.get('page') <=0 ) {
             setSearchParams({page: '1'})
+
         }
 
-        searchParams.set('sort','DESC')
+
         const page = searchParams.get('page');
-            console.log(searchParams.get('sort'))
 
         dispatch(getPage({page}));
 
         dispatch(fetchMainComments(page));
 
+        // const params = { page: searchParams.get('page'), sort: 'asrrr' };
+        // setSearchParams(params);
+
+
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [searchParams])
+    }, [searchParams,mainComments.item])
 
 
     return (

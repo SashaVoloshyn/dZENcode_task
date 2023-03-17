@@ -132,6 +132,8 @@ class AuthMiddleware {
     public isClientKey(req: IRequest, _: Response, next: NextFunction): void {
         try {
             const { body } = req;
+            console.log(req.params);
+            console.log(req.body);
 
             const { error } = clientKeySchema.validate(body);
 
