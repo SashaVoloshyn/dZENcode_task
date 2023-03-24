@@ -1,16 +1,32 @@
-import { TextField, Button, Paper, Typography } from '@mui/material'
-import React, { useState } from 'react'
+import {TextField, Button, Paper, Typography} from '@mui/material'
+import React, {useEffect, useRef, useState} from 'react'
+import ReCAPTCHA from 'react-google-recaptcha';
 import styles from './AddmainComment.module.scss'
-import { useForm } from 'react-hook-form'
-import { useDispatch, useSelector } from 'react-redux'
-import { fetchCreateMainComments } from '../../redux/slices/mainComments'
-import { useNavigate } from 'react-router-dom'
-import {joiResolver} from "@hookform/resolvers/joi";
-import {MainCommentCreateValidator} from "../../utils";
+import {useForm} from 'react-hook-form'
+import {useDispatch, useSelector} from 'react-redux'
+import {fetchCreateMainComments} from '../../redux/slices/mainComments'
+import {useNavigate} from 'react-router-dom'
+import {joiResolver} from '@hookform/resolvers/joi'
+import {MainCommentCreateValidator} from '../../utils'
+import {mainConfig} from "../../configs/main.config";
 
 export const AddMainCommentPage = () => {
     const [formText, setFormText] = useState('')
-    const [helperText, setHelperText] = useState('')
+    const [clossed, setClossed] = useState('')
+    const isAuth = useSelector((state) => state.auth.data)
+
+
+    const {
+        register,
+        handleSubmit,
+        reset,
+        setError,
+        formState: {errors}
+    } = useForm({
+        mode: 'all',
+        resolver: joiResolver(MainCommentCreateValidator),
+        shouldUnregister: true,
+    })
 
     const navigate = useNavigate()
 
@@ -36,11 +52,13 @@ export const AddMainCommentPage = () => {
         setFormText(newText)
     }
 
-    const checkIfTagsClosed = () => {
+    const checkIfTagsClosed = (e) => {
+        const text = e.target.value;
+        setFormText(text)
+
         const openingTags = []
         const closingTags = []
         const regex = /<\/?(a|code|i|strong)(?:\s+[^>]*|\s*)?>/gi
-        // const regex = /<([a-zA-Zа-яА-ЯёЁ]+)[^>]*>(.*?)<\/\1>|<(i|strong|code)[^>]*>(.*?)<\/\3>|<a[^>]*href\s*=\s*"[^"]*"[^>]*>(.*?)<\/a>|<(i|strong|code|a)[^>]*\/?>/gui;
 
         let match
         while ((match = regex.exec(formText))) {
@@ -50,6 +68,7 @@ export const AddMainCommentPage = () => {
                 openingTags.push(match[1])
             }
         }
+
 
         const unclosedTags = []
         const tagTypes = ['a', 'code', 'i', 'strong']
@@ -63,68 +82,81 @@ export const AddMainCommentPage = () => {
             }
         }
 
-        if (unclosedTags.length === 0) {
-            setHelperText('')
+        if (!!unclosedTags.length) {
+            setError('text', {type: 'unclosedTags', message: `Не закритий тег: ${unclosedTags}`});
+            setClossed(`Не закритий тег: ${unclosedTags}`);
         } else {
-            setHelperText(`Unclosed tags detected: ${unclosedTags.join(', ')}`)
+            setClossed('')
         }
     }
 
-    const { register, handleSubmit,reset, formState: {errors}} = useForm({
-        defaultValues: {
-            text: ''
-        },
-        mode: 'onChange',
-        resolver: joiResolver(MainCommentCreateValidator),
-    })
 
-    const { userData } = useSelector((state) => state.auth)
+    const {userData} = useSelector((state) => state.auth)
     const dispatch = useDispatch()
 
     let userId = undefined
 
     if (userData) {
-        userId = userData.data.id
+        userId = Number(userData.data.id)
     }
 
+    const recaptchaRef = useRef(null);
+    const [captchaToken, setCaptchaToken] = useState(null);
+
+    const handleCaptchaChange = token => {
+        console.log('Captcha token:', token);
+        setCaptchaToken(token);
+
+    };
+
+
     const onSubmit = async (data) => {
-        const formData = new FormData()
-        data.fileImg[0] && formData.append('fileImg', data.fileImg[0])
-        data.fileText[0] && formData.append('fileText', data.fileText[0])
-        data.pageUrl && formData.append('pageUrl', data.pageUrl)
-        formData.append('text', data.text)
-        formData.append('userId', userId)
-        formData.append('clientKey', window.localStorage.getItem('clientKey'))
+        if (!errors.text) {
+            setClossed('');
+        }
 
-        const mainCommentData = await dispatch(
-            fetchCreateMainComments(formData)
-        )
-
-        console.log(mainCommentData)
-        reset();
-
+        console.log(!!clossed);
+        if (!clossed) {
+            const formData = new FormData();
+            data.fileImg[0] && formData.append('fileImg', data.fileImg[0]);
+            data.fileText[0] && formData.append('fileText', data.fileText[0]);
+            data.pageUrl && formData.append('pageUrl', data.pageUrl);
+            formData.append('text', data.text);
+            formData.append('userId', userId);
+            formData.append('clientKey', window.localStorage.getItem('clientKey'));
 
 
-        if (typeof mainCommentData.payload === "string") {
-            return alert(mainCommentData.payload)
+            const mainCommentData = await dispatch(fetchCreateMainComments(formData));
 
+            console.log(mainCommentData);
+            reset();
+
+            if (typeof mainCommentData.payload === 'string') {
+                return alert(mainCommentData.payload)
+            } else {
+                navigate('/')
+            }
         } else {
-            navigate('/')
+            console.log(errors)
+            return alert(clossed);
         }
     }
 
+    useEffect(() => {
+    }, [isAuth?.data]);
+
     return (
-        <Paper classes={{ root: styles.root }}>
-            <Typography classes={{ root: styles.title }} variant="h5">
+        <Paper classes={{root: styles.root}}>
+            <Typography classes={{root: styles.title}} variant='h5'>
                 Створити комментар
             </Typography>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <TextField
                     error={Boolean(errors.pageUrl?.message)}
                     helperText={errors.pageUrl && <span>{errors.pageUrl?.message}</span>}
-                    {...register('pageUrl',{required: "Додайте URL"})}
+                    {...register('pageUrl')}
                     className={styles.field}
-                    label="HomePage URL"
+                    label='HomePage URL'
                     fullWidth
                 />
                 <div className={styles.tags}>
@@ -141,50 +173,45 @@ export const AddMainCommentPage = () => {
                 <TextField
                     error={Boolean(errors.text?.message)}
                     helperText={errors.text && <span>{errors.text?.message}</span>}
-                    {...register("text", {required: "Напишіть комментар"})}
+                    {...register('text', {required: 'Напишіть комментар'})}
                     className={styles.field}
                     fullWidth
                     multiline
                     rows={5}
                     label={'Комментар'}
-                    id="myTextArea"
+                    id='myTextArea'
                     value={formText}
-                    onChange={(e) => setFormText(e.target.value)}
+                    onChange={checkIfTagsClosed}
                 />
                 <div className={styles.upload}>
-                    <label htmlFor="fileImg">Виберіть зображення</label>
+                    <label htmlFor='fileImg'>Виберіть зображення</label>
                     <input
                         {...register('fileImg')}
-                        type="file"
-                        accept=".jpg,.png,.jpeg,.gif"
+                        type='file'
+                        accept='.jpg,.png,.jpeg,.gif'
                         defaultValue={null}
-                        id="fileImg"
+                        id='fileImg'
                         hidden={true}
                     />
-                    <label htmlFor="fileText">Виберіть .txt файл</label>
+                    <label htmlFor='fileText'>Виберіть .txt файл</label>
                     <input
                         {...register('fileText')}
-                        type="file"
-                        accept=".txt"
+                        type='file'
+                        accept='.txt'
                         defaultValue={null}
-                        id="fileText"
+                        id='fileText'
                         hidden={true}
                     />
                 </div>
 
-                <div>{/*  <LoadCanvasTemplate /> */}</div>
-                <TextField
-                    className={styles.field}
-                    label="CAPTCHA"
-                    helperText={''}
-                    fullWidth
+                <ReCAPTCHA
+                    sitekey={mainConfig.ReCAPTCHA_KEY}
+                    ref={recaptchaRef}
+                    onChange={handleCaptchaChange}
                 />
                 <div className={styles.submit}>
-                    <Button
-                        type="submit"
-                        variant="contained"
-                        onClick={checkIfTagsClosed}
-                    >
+                    <Button type='submit' disabled={!captchaToken} variant='contained'
+                            id='createBtn'>
                         Submit
                     </Button>
                 </div>

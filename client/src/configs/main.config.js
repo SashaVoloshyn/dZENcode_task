@@ -4,4 +4,6 @@ export const mainConfig = {
 
   CLOUD_DOMAIN_NAME: process.env.REACT_APP_CLOUD_DOMAIN_NAME,
 
+  ReCAPTCHA_KEY: process.env.REACT_APP_ReCAPTCHA_KEY,
+
 };

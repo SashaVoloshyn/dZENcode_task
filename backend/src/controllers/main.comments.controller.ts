@@ -5,7 +5,7 @@ import { IFileExtended, IMainComment, IRequest, IResponse } from '../interfaces'
 import { mainCommentsRepository } from '../repositories';
 import { ErrorHandler } from '../errors';
 import { errorMessageConstants } from '../constants';
-import { FileEnum, HttpMessageEnum, HttpStatusEnum, ItemTypeFileEnum } from '../enums';
+import { FileEnum, HttpMessageEnum, HttpStatusEnum, ItemTypeFileEnum, SortEnum } from '../enums';
 import { paginationService, s3Service } from '../services';
 import { mainConfig } from '../configs';
 
@@ -189,13 +189,15 @@ class MainCommentsController {
         try {
             let page = Number(req.pagination?.page);
             let perPage = Number(req.pagination?.perPage);
+            let sort = req.sort as SortEnum;
 
             if (!page) page = 1;
             if (!perPage) perPage = 25;
+            if (!sort) sort = 'DESC' as SortEnum;
 
             const skip = paginationService.createSkip(page, perPage);
 
-            const mainComments = await mainCommentsRepository.getAllWithPagination(skip, perPage);
+            const mainComments = await mainCommentsRepository.getAllWithPagination(skip, perPage, sort);
 
             return res.status(HttpStatusEnum.OK).json({
                 status: HttpStatusEnum.OK,
@@ -215,13 +217,15 @@ class MainCommentsController {
         try {
             let page = Number(req.pagination?.page);
             let perPage = Number(req.pagination?.perPage);
+            let sort = req.sort as SortEnum;
 
             if (!page) page = 1;
             if (!perPage) perPage = 25;
+            if (!sort) sort = 'ASC' as SortEnum;
 
             const skip = paginationService.createSkip(page, perPage);
 
-            const mainComments = await mainCommentsRepository.getAllOfUserNameWithPagination(skip, perPage);
+            const mainComments = await mainCommentsRepository.getAllOfUserNameWithPagination(skip, perPage, sort);
 
             return res.status(HttpStatusEnum.OK).json({
                 status: HttpStatusEnum.OK,
@@ -241,13 +245,15 @@ class MainCommentsController {
         try {
             let page = Number(req.pagination?.page);
             let perPage = Number(req.pagination?.perPage);
+            let sort = req.sort as SortEnum;
 
             if (!page) page = 1;
             if (!perPage) perPage = 25;
+            if (!sort) sort = 'ASC' as SortEnum;
 
             const skip = paginationService.createSkip(page, perPage);
 
-            const mainComments = await mainCommentsRepository.getAllOfUserEmailWithPagination(skip, perPage);
+            const mainComments = await mainCommentsRepository.getAllOfUserEmailWithPagination(skip, perPage, sort);
 
             return res.status(HttpStatusEnum.OK).json({
                 status: HttpStatusEnum.OK,

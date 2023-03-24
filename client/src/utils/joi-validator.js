@@ -22,5 +22,11 @@ export const MainCommentCreateValidator=Joi.object({
     fileImg: Joi.optional().messages(errorValidationMessageConst),
     fileText: Joi.optional().messages(errorValidationMessageConst)
 
+});
+
+export const CommentCreateValidator=Joi.object({
+    text:joiCommonValidator.text.required().trim().messages(errorValidationMessageConst),
+    fileImg: Joi.optional().messages(errorValidationMessageConst),
+    fileText: Joi.optional().messages(errorValidationMessageConst)
 })
 

@@ -1,5 +1,6 @@
 import { NextFunction, Response } from 'express';
 
+import { TokenExpiredError } from 'jsonwebtoken';
 import { IPayload, IRequest, IUser } from '../interfaces';
 import { clientKeySchema, loginSchema, tokenSchema, userSchema } from '../utils';
 import { ErrorHandler } from '../errors';
@@ -115,8 +116,8 @@ class AuthMiddleware {
                 next(
                     new ErrorHandler(
                         errorMessageConstants.authorization,
-                        HttpStatusEnum.BAD_REQUEST,
-                        HttpMessageEnum.BAD_REQUEST
+                        HttpStatusEnum.UNAUTHORIZED,
+                        HttpMessageEnum.UNAUTHORIZED
                     )
                 );
                 return;
@@ -132,8 +133,6 @@ class AuthMiddleware {
     public isClientKey(req: IRequest, _: Response, next: NextFunction): void {
         try {
             const { body } = req;
-            console.log(req.params);
-            console.log(req.body);
 
             const { error } = clientKeySchema.validate(body);
 
@@ -159,8 +158,8 @@ class AuthMiddleware {
                 next(
                     new ErrorHandler(
                         errorMessageConstants.authorization,
-                        HttpStatusEnum.BAD_REQUEST,
-                        HttpMessageEnum.BAD_REQUEST
+                        HttpStatusEnum.UNAUTHORIZED,
+                        HttpMessageEnum.UNAUTHORIZED
                     )
                 );
                 return;
@@ -180,8 +179,8 @@ class AuthMiddleware {
                 next(
                     new ErrorHandler(
                         errorMessageConstants.authorization,
-                        HttpStatusEnum.BAD_REQUEST,
-                        HttpMessageEnum.BAD_REQUEST
+                        HttpStatusEnum.UNAUTHORIZED,
+                        HttpMessageEnum.UNAUTHORIZED
                     )
                 );
                 return;
@@ -190,7 +189,7 @@ class AuthMiddleware {
             const { error } = tokenSchema.validate({ token });
 
             if (error) {
-                next(new ErrorHandler(error.message, HttpStatusEnum.BAD_REQUEST, HttpMessageEnum.BAD_REQUEST));
+                next(new ErrorHandler(error.message, HttpStatusEnum.UNAUTHORIZED, HttpMessageEnum.UNAUTHORIZED));
                 next();
                 return;
             }
@@ -206,8 +205,8 @@ class AuthMiddleware {
     public async verifyAccessToken(req: IRequest, _: Response, next: NextFunction): Promise<void> {
         try {
             const token = req.authorization as string;
-            const { userName, id } = jwtService.verify(token) as IPayload;
 
+            const { userName, id } = (await jwtService.verify(token)) as IPayload;
             if (!userName && !id) {
                 next(
                     new ErrorHandler(
@@ -221,17 +220,25 @@ class AuthMiddleware {
 
             req.payload = { userName, id };
 
-            console.log(req.payload);
             next();
         } catch (e) {
-            next(e);
+            if (e instanceof TokenExpiredError) {
+                next(
+                    new ErrorHandler(
+                        errorMessageConstants.tokenExpired,
+                        HttpStatusEnum.UNAUTHORIZED,
+                        HttpMessageEnum.UNAUTHORIZED
+                    )
+                );
+                return;
+            }
+            return next(e);
         }
     }
 
     public async verifyRefreshToken(req: IRequest, _: Response, next: NextFunction): Promise<void> {
         try {
             const token = req.authorization as string;
-            console.log(token);
             const { userName, id } = jwtService.verify(token, authConstants.REFRESH) as IPayload;
 
             if (!userName || !id) {
@@ -248,7 +255,17 @@ class AuthMiddleware {
             req.payload = { userName, id };
             next();
         } catch (e) {
-            next(e);
+            if (e instanceof TokenExpiredError) {
+                next(
+                    new ErrorHandler(
+                        errorMessageConstants.tokenExpired,
+                        HttpStatusEnum.UNAUTHORIZED,
+                        HttpMessageEnum.UNAUTHORIZED
+                    )
+                );
+                return;
+            }
+            return next(e);
         }
     }
 

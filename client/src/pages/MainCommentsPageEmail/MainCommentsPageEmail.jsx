@@ -21,11 +21,13 @@ const MainCommentsPageEmail = () => {
             setSearchParams({page: '1'})
         }
 
+        const sort = searchParams.get('sort')
+
         const page = searchParams.get('page');
 
         dispatch(getPage({page}));
 
-        dispatch(fetchMainCommentsUserEmail(page))
+        dispatch(fetchMainCommentsUserEmail({page, sort}))
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchParams,mainComments.item])
 
@@ -49,7 +51,6 @@ const MainCommentsPageEmail = () => {
                         user={obj.user}
                         created_at={obj.created_at}
                         comments={obj.comments}
-                        isEditable={obj.user.id === isAuth?.data.id}
                         isAuth={isAuth}
                     />
                 )

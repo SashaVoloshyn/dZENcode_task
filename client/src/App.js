@@ -6,7 +6,7 @@ import {
     RegistrationPage
 } from './pages'
 import { useSelector, useDispatch } from 'react-redux'
-import { fetchAuthMe, fetchRefresh } from './redux/slices/auth'
+import { fetchAuthMe} from './redux/slices/auth'
 import { Navigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import Layout from './components/Layout/Layout'
@@ -21,15 +21,9 @@ function App() {
     useEffect(() => {
         dispatch(fetchAuthMe())
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-
-    useEffect(() => {
-        if (error === 'jwt expired') {
-            dispatch(fetchRefresh())
-            console.log(error)
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [error])
+
+
 
     return (
         <>

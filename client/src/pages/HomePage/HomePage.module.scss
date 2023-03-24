@@ -18,3 +18,10 @@
     color: #4361ee;
     border-bottom: 3px solid#4361ee;
 }
+
+.wrap {
+    display: flex;
+    align-items: unset;
+    justify-content: space-between;
+    margin: 5px;
+}

@@ -19,4 +19,5 @@ export interface IRequest extends Request {
     mainComment?: IMainComment | MainComments;
     pagination?: IPaginationQuery;
     comment?: IComment | Comments;
+    sort?: string;
 }

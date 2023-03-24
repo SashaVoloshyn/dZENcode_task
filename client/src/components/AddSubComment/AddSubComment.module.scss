@@ -1,0 +1,49 @@
+textarea{
+  resize: none;
+  overflow-y: scroll;
+}
+
+
+li {
+  display: inline-flex;
+  position: relative;
+  background-color: white;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  padding: 0 10px;
+  margin-right: 20px;
+  opacity: 0.5;
+  svg {
+    font-size: 18px;
+    line-height: 18px;
+    margin-top: 2px;
+    margin-right: 5px;
+  }
+  &:hover {
+    color: black;
+    opacity: 1;
+  }
+
+  label {
+    cursor: pointer;
+  }
+
+  img {
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+
+  div {
+    position: relative;
+    z-index: 0;
+    background-color: #fff;
+  }
+
+  input {
+    display: none;
+  }
+}

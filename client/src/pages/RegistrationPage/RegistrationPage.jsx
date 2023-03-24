@@ -1,98 +1,138 @@
-import React from 'react';
-import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
-import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Avatar';
+import React, { useState } from 'react'
+import Typography from '@mui/material/Typography'
+import TextField from '@mui/material/TextField'
+import Paper from '@mui/material/Paper'
+import Button from '@mui/material/Button'
+import Avatar from '@mui/material/Avatar'
 
-import styles from './Login.module.scss';
-import {useDispatch, useSelector} from "react-redux";
-import {fetchRegister} from "../../redux/slices/auth";
-import {useForm} from "react-hook-form";
-import {Navigate} from "react-router-dom";
-import {joiResolver} from "@hookform/resolvers/joi";
-import {RegistrationValidator} from "../../utils";
+import styles from './Login.module.scss'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchRegister } from '../../redux/slices/auth'
+import { useForm } from 'react-hook-form'
+import { Navigate } from 'react-router-dom'
+import { joiResolver } from '@hookform/resolvers/joi'
+import { RegistrationValidator } from '../../utils'
 
 export const RegistrationPage = () => {
+  const [avatar, setAvatar] = useState('')
 
-    const isUser = useSelector(state => state.auth.userData)
+  const isUser = useSelector((state) => state.auth.userData)
 
-    const dispatch = useDispatch()
+  const dispatch = useDispatch()
 
-    const {register, handleSubmit, formState: {errors}} = useForm({
-        defaultValues: {
-            userName: "hello",
-            email: "hello@lo.com",
-            password: "qwertY123654789"
-        },
-        mode: "onTouched",
-        resolver: joiResolver(RegistrationValidator)
-    });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({
+    defaultValues: {
+      userName: 'hello',
+      email: 'hello@lo.com',
+      password: 'qwertY123654789'
+    },
+    mode: 'onTouched',
+    resolver: joiResolver(RegistrationValidator)
+  })
 
+  const onSubmit = async (data) => {
+    const formData = new FormData()
+    data.avatar[0] && formData.append('avatar', data.avatar[0])
+    formData.append('userName', data.userName)
+    formData.append('email', data.email)
+    formData.append('password', data.password)
 
-    const onSubmit = async (data) => {
-        const formData = new FormData();
-        data.avatar[0] && formData.append("avatar", data.avatar[0]);
-        formData.append("userName", data.userName);
-        formData.append("email", data.email);
-        formData.append("password", data.password);
+    const userData = await dispatch(fetchRegister(formData))
 
-        const userData = await dispatch(fetchRegister(formData));
-
-        console.log(userData);
-        if (userData.error.message) {
-            return alert(userData.payload);
-        }
+    console.log(userData)
+    if (userData.error.message) {
+      return alert(userData.payload)
     }
+  }
 
-    if (isUser) {
-        return <Navigate to="/login"/>
+  if (isUser) {
+    return <Navigate to='/login' />
+  }
+  console.log(errors)
+
+  function showPreview(event) {
+    if (event.target.files.length > 0) {
+      setAvatar(URL.createObjectURL(event.target.files[0]))
     }
-    console.log(errors);
+  }
 
-    return (
-        <Paper classes={{root: styles.root}}>
-            <Typography classes={{root: styles.title}} variant="h5">
-                Створити акаунт
-            </Typography>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <div className={styles.avatar}>
-                    <Avatar
-                        type="file"
-                        sx={{width: 100, height: 100}}/>
+  return (
+    <Paper classes={{ root: styles.root }}>
+      <Typography classes={{ root: styles.title }} variant='h5'>
+        Створити акаунт
+      </Typography>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className={styles.avatar}>
+          <Avatar
+            type='file'
+            sx={!avatar ? { width: 100, height: 100 } : { display: 'none' }}
+          />
+          <img
+            style={
+              !!avatar
+                ? {
+                    display: 'block',
+                    width: 100,
+                    height: 100,
+                    objectFit: 'cover'
+                  }
+                : { display: 'none' }
+            }
+            src={avatar}
+            alt='ava'
+          />
+        </div>
+        <label className={styles.castomLabel} htmlFor='avatar'>
+          Додати аватар
+        </label>
+        <input
+          {...register('avatar')}
+          className={styles.field}
+          type='file'
+          accept='.jpg,.png,.jpeg'
+          id='avatar'
+          hidden={true}
+          onChange={(e) => showPreview(e)}
+        />
 
-                </div>
-                <label className={styles.castomLabel} htmlFor="avatar">Додати аватар</label>
-                <input {...register("avatar")}
-                       className={styles.field}
-                       type="file"
-                       accept=".jpg,.png,.jpeg"
-                       id="avatar"
-                       hidden={true}
-
-                />
-
-                <TextField className={styles.field} label="Iм'я"
-                           error={Boolean(errors.userName?.message)}
-                           helperText={errors.userName && <span>{errors.userName?.message}</span>}
-                           {...register("userName", {required: "Вкажіть Ім'я"})}
-                          fullWidth/>
-                <TextField className={styles.field} label="E-Mail"
-                           type="email"
-                           error={Boolean(errors.email?.message)}
-                           helperText={errors.email && <span>{errors.email?.message}</span>}
-                           {...register("email", {required: "Вкажіть E-Mail"})}
-                           fullWidth/>
-                <TextField className={styles.field} label="Пароль"
-                           type="password"
-                           error={Boolean(errors.password?.message)}
-                           helperText={errors.password && <span>{errors.password?.message}</span>}
-                           {...register("password", {required: "Вкажіть пароль"})}
-                           fullWidth/>
-                <Button type="submit" size="large" variant="contained" fullWidth>
-                    Зареєструватися
-                </Button>
-            </form>
-        </Paper>
-    );
-};
+        <TextField
+          className={styles.field}
+          label="Iм'я"
+          error={Boolean(errors.userName?.message)}
+          helperText={
+            errors.userName && <span>{errors.userName?.message}</span>
+          }
+          {...register('userName', { required: "Вкажіть Ім'я" })}
+          fullWidth
+        />
+        <TextField
+          className={styles.field}
+          label='E-Mail'
+          type='email'
+          error={Boolean(errors.email?.message)}
+          helperText={errors.email && <span>{errors.email?.message}</span>}
+          {...register('email', { required: 'Вкажіть E-Mail' })}
+          fullWidth
+        />
+        <TextField
+          className={styles.field}
+          label='Пароль'
+          type='password'
+          error={Boolean(errors.password?.message)}
+          helperText={
+            errors.password && <span>{errors.password?.message}</span>
+          }
+          {...register('password', { required: 'Вкажіть пароль' })}
+          fullWidth
+        />
+        <Button type='submit' size='large' variant='contained' fullWidth>
+          Зареєструватися
+        </Button>
+      </form>
+    </Paper>
+  )
+}

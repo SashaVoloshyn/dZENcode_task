@@ -3,6 +3,7 @@ import { DeleteResult, UpdateResult } from 'typeorm';
 import { AppDataSource } from '../configs';
 import { MainComments } from '../entities';
 import { IMainComment } from '../interfaces';
+import { SortEnum } from '../enums';
 
 class MainCommentsRepository {
     mainCommentsRepository;
@@ -27,7 +28,7 @@ class MainCommentsRepository {
             .getMany();
     }
 
-    public async getAllWithPagination(skip: number, take: number): Promise<[MainComments[], number]> {
+    public async getAllWithPagination(skip: number, take: number, sort: SortEnum): Promise<[MainComments[], number]> {
         return this.mainCommentsRepository
             .createQueryBuilder('mainComments')
             .leftJoinAndSelect('mainComments.comments', 'comments')
@@ -45,13 +46,17 @@ class MainCommentsRepository {
                 'user.email',
                 'user.avatar',
             ])
-            .orderBy('mainComments.id', 'DESC')
+            .orderBy('mainComments.id', `${sort}`)
             .skip(skip)
             .take(take)
             .getManyAndCount();
     }
 
-    public async getAllOfUserNameWithPagination(skip: number, take: number): Promise<[MainComments[], number]> {
+    public async getAllOfUserNameWithPagination(
+        skip: number,
+        take: number,
+        sort: SortEnum
+    ): Promise<[MainComments[], number]> {
         return this.mainCommentsRepository
             .createQueryBuilder('mainComments')
             .leftJoinAndSelect('mainComments.comments', 'comments')
@@ -69,13 +74,17 @@ class MainCommentsRepository {
                 'user.email',
                 'user.avatar',
             ])
-            .orderBy('mainCommentsUser.userName', 'ASC')
+            .orderBy('mainCommentsUser.userName', `${sort}`)
             .skip(skip)
             .take(take)
             .getManyAndCount();
     }
 
-    public async getAllOfUserEmailWithPagination(skip: number, take: number): Promise<[MainComments[], number]> {
+    public async getAllOfUserEmailWithPagination(
+        skip: number,
+        take: number,
+        sort: SortEnum
+    ): Promise<[MainComments[], number]> {
         return this.mainCommentsRepository
             .createQueryBuilder('mainComments')
             .leftJoinAndSelect('mainComments.comments', 'comments')
@@ -93,7 +102,7 @@ class MainCommentsRepository {
                 'user.email',
                 'user.avatar',
             ])
-            .orderBy('mainCommentsUser.email', 'ASC')
+            .orderBy('mainCommentsUser.email', `${sort}`)
             .skip(skip)
             .take(take)
             .getManyAndCount();

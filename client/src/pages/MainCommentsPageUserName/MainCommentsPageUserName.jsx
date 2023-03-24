@@ -19,12 +19,13 @@ const MainCommentsPageUserName = () => {
         if (!searchParams.get('page') || searchParams.get('page') <=0 ) {
             setSearchParams({page: '1'})
         }
+        const sort = searchParams.get('sort')
 
         const page = searchParams.get('page');
 
         dispatch(getPage({page}));
 
-        dispatch(fetchMainCommentsUserName(page))
+        dispatch(fetchMainCommentsUserName({page,sort}))
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchParams,mainComments.item])
 
@@ -48,7 +49,6 @@ const MainCommentsPageUserName = () => {
                         user={obj.user}
                         created_at={obj.created_at}
                         comments={obj.comments}
-                        isEditable={obj.user.id === isAuth?.data.id}
                         isAuth={isAuth}
                     />
                 )

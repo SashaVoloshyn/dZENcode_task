@@ -16,6 +16,11 @@ class PaginationMiddleware {
         if (queryParams?.perPage && Number(queryParams.perPage) > 0) {
             req.pagination = { ...req.pagination, perPage: queryParams.perPage };
         }
+
+        if (queryParams?.sort === 'ASC' || queryParams?.sort === 'DESC') {
+            req.sort = queryParams?.sort;
+        }
+
         next();
     }
 

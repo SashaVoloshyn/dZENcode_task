@@ -5,9 +5,28 @@ import axios from "../../axios";
 
 export const fetchCreateComments = createAsyncThunk("comments/fetchCreateComments",
     async (params,{rejectWithValue}) => {
+        console.log('zzzzzzzzzzz')
         try {
             const {data} = await axios.post("/comments", params);
+            console.log(data)
             return data;
+
+        }catch (e) {
+            console.error(e.response.data.message)
+            return rejectWithValue(e.response.data.message)
+
+        }
+    });
+
+export const deleteComments = createAsyncThunk("comments/deleteComments",
+    async (params,{rejectWithValue}) => {
+        const {clientKey,id} = params
+        console.log('deleteComments')
+        try {
+            const {data} = await axios.delete(`/comments/${id}`, {data: {clientKey}});
+            console.log(data)
+            return data
+
 
         }catch (e) {
             return rejectWithValue(e.response.data.message)
@@ -29,16 +48,29 @@ const commentsSlice = createSlice({
     initialState,
     extraReducers:{
         [fetchCreateComments.pending]: (state) => {
-            state.mainComments.item = null;
-            state.mainComments.status = "loading";
+            state.comments.item = null;
+            state.comments.status = "loading";
         },
         [fetchCreateComments.fulfilled]: (state, actions) => {
-            state.mainComments.item = actions.payload.data;
-            state.mainComments.status = "loaded";
+            state.comments.item = actions.payload.data;
+            state.comments.status = "loaded";
         },
         [fetchCreateComments.rejected]: (state) => {
-            state.mainComments.item = null;
-            state.mainComments.status = "error";
+            state.comments.item = null;
+            state.comments.status = "error";
+        },
+
+        [deleteComments.pending]: (state) => {
+            state.comments.status = "loading";
+            state.comments.item = null;
+        },
+        [deleteComments.fulfilled]: (state, actions) => {
+            state.comments.item = actions.payload;
+
+        },
+        [deleteComments.rejected]: (state) => {
+            state.comments.status = "error";
+            state.comments.item = null;
         },
 
     }

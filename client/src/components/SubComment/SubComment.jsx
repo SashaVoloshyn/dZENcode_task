@@ -4,21 +4,31 @@ import React from 'react'
 import { UserInfo } from '../UserInfo'
 import SimCardDownloadIcon from '@mui/icons-material/SimCardDownload'
 import DeleteIcon from '@mui/icons-material/Clear'
-import EditIcon from '@mui/icons-material/Edit'
 import { useSelector } from 'react-redux'
 import styles from './SubComment.module.scss'
 import { mainConfig } from '../../configs/main.config'
+import {deleteComments} from "../../redux/slices/comments";
 
 const SubComment = ({
-    comment: { created_at, user, id, text, fileImg, fileText },
+    comment: { created_at, user, id, text, fileImg, fileText }, dispatch,
     isEditable
 }) => {
     const { mainComments } = useSelector((state) => state.mainComments)
     console.log(mainComments);
 
-    // const user = mainComments.items[0].filter(
-    //     (main) => main.user.id === userId
-    // )[0].user
+    const onClickRemove = async () => {
+       try {
+           const clientKey = window.localStorage.getItem('clientKey')
+           const confirmation = window.confirm('Ви дійсно хочете видалити ваш комментар?')
+           if (confirmation) {
+               await dispatch(deleteComments({ id, clientKey }))
+           }
+
+       }catch (e) {
+           console.error(e)
+       }
+    }
+
 
 
 
@@ -26,12 +36,7 @@ const SubComment = ({
         <div className={clsx(styles.root)}>
             {isEditable && (
                 <div className={styles.editButtons}>
-                    <a href={`/MainComments/${id}/edit`}>
-                        <IconButton color="primary">
-                            <EditIcon />
-                        </IconButton>
-                    </a>
-                    <IconButton color="secondary">
+                    <IconButton onClick={onClickRemove} color="secondary">
                         <DeleteIcon />
                     </IconButton>
                 </div>
@@ -39,6 +44,9 @@ const SubComment = ({
             <div className={styles.wrapper}>
                 <UserInfo {...user} additionalText={created_at} />
                 <div className={styles.indention}>
+                    <p className={styles.created_at}>
+                        {created_at.slice(0, 10) + ' ' + created_at.slice(11, 16)}
+                    </p>
                     <p className={styles.text}>{text}</p>
                 </div>
                 {fileImg && (

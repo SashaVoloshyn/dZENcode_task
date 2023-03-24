@@ -2,8 +2,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import axios from "../../axios";
 
-export const  fetchMainComments = createAsyncThunk("mainComments/fetchMainComments", async (page) => {
-  const { data } = await axios.get("/mainComments", {params:{page}});
+export const  fetchMainComments = createAsyncThunk("mainComments/fetchMainComments", async ({page,sort}) => {
+  const { data } = await axios.get("/mainComments", {params:{page,sort}});
   return data;
 
 });
@@ -11,7 +11,6 @@ export const  fetchMainComments = createAsyncThunk("mainComments/fetchMainCommen
 export const fetchCreateMainComments = createAsyncThunk("mainComments/fetchCreateMainComments",
     async (params,{rejectWithValue}) => {
   try {
-    console.log(params)
     const {data} = await axios.post("/mainComments", params);
     return data;
 
@@ -22,9 +21,9 @@ export const fetchCreateMainComments = createAsyncThunk("mainComments/fetchCreat
 });
 
 export const fetchMainCommentsUserName = createAsyncThunk("mainComments/fetchMainCommentsUserName",
-    async (page,{rejectWithValue}) => {
+    async ({page,sort},{rejectWithValue}) => {
   try {
-    const { data } = await axios.get("/mainComments/userName",{params:{page}});
+    const { data } = await axios.get("/mainComments/userName",{params:{page,sort}});
     return data;
 
   }catch (e) {
@@ -34,9 +33,9 @@ export const fetchMainCommentsUserName = createAsyncThunk("mainComments/fetchMai
 });
 
 export const fetchMainCommentsUserEmail = createAsyncThunk("mainComments/fetchMainCommentsUserEmail",
-    async (page,{rejectWithValue}) => {
+    async ({page,sort},{rejectWithValue}) => {
       try {
-        const { data } = await axios.get("/mainComments/userEmail",{params:{page}});
+        const { data } = await axios.get("/mainComments/userEmail",{params:{page,sort}});
         return data;
 
       }catch (e) {
@@ -48,6 +47,7 @@ export const fetchMainCommentsUserEmail = createAsyncThunk("mainComments/fetchMa
 export const deleteMainComments = createAsyncThunk("mainComments/deleteMainComments",
     async (params,{rejectWithValue}) => {
       const {clientKey,id} = params
+      console.log('www')
       try {
         const {data} = await axios.delete(`/mainComments/${id}`, {data: {clientKey}});
         console.log(data)
@@ -66,7 +66,8 @@ const initialState = {
     currentPage:1,
     item: null,
     items: [],
-    status: "loading"
+    status: "loading",
+    sorting:null
   }
 };
 
@@ -76,8 +77,11 @@ const mainCommentsSlice = createSlice({
   reducers: {
     getPage: (state, action)=>{
       state.mainComments.currentPage=action.payload.page
-      console.log(state.mainComments.currentPage)
-    }
+    },
+    getSort: (state, action) => {
+      state.mainComments.sorting = action.payload
+      console.log(state.mainComments.sorting,'state.mainComments.sorting')
+    },
   },
   extraReducers: {
     [fetchMainComments.pending]: (state) => {
@@ -100,7 +104,6 @@ const mainCommentsSlice = createSlice({
     },
     [fetchCreateMainComments.fulfilled]: (state, actions) => {
       state.mainComments.item = actions.payload.data;
-      state.mainComments.status = "loaded";
     },
     [fetchCreateMainComments.rejected]: (state) => {
       state.mainComments.item = null;
@@ -152,7 +155,7 @@ const mainCommentsSlice = createSlice({
 
 });
 
-export const {getPage} = mainCommentsSlice.actions;
+export const {getPage , getSort} = mainCommentsSlice.actions;
 
 
 export const mainCommentsReducer = mainCommentsSlice.reducer;

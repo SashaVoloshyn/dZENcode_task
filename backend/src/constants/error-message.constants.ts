@@ -2,6 +2,7 @@ export const errorMessageConstants = {
     userAlreadyExists: 'Користувач вже існує.',
     userNotFound: 'Користувача не знайдено. Зареєструйтесь, будь ласка.',
     unauthorized: 'Невірний email або пароль.',
+    tokenExpired: 'jwt expired',
     unknown: 'Невідома помилка',
     clientKey: 'Невірні данні, clientKey',
     userNotRegistration: 'ПОМИЛКА СЕРВЕРА: НЕ ВДАЛОСЯ ЗАПИСАТИ КОРИСТУВАЧА',

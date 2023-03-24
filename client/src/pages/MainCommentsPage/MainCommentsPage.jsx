@@ -1,5 +1,6 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+
 import {fetchMainComments, getPage} from '../../redux/slices/mainComments'
 import { MainComment } from '../../components'
 import {useSearchParams} from "react-router-dom";
@@ -9,6 +10,7 @@ const MainCommentsPage = () => {
     const isAuth = useSelector((state) => state.auth.data)
     const dispatch = useDispatch()
     const { mainComments } = useSelector((state) => state.mainComments)
+    const { comments } = useSelector((state) => state.comments)
 
 
     const [searchParams, setSearchParams] = useSearchParams();
@@ -24,20 +26,18 @@ const MainCommentsPage = () => {
 
         }
 
+        const sort = searchParams.get('sort')
 
         const page = searchParams.get('page');
 
         dispatch(getPage({page}));
 
-        dispatch(fetchMainComments(page));
-
-        // const params = { page: searchParams.get('page'), sort: 'asrrr' };
-        // setSearchParams(params);
-
-
+        dispatch(fetchMainComments({page,sort}));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [searchParams,mainComments.item])
+    }, [searchParams,mainComments.item,comments.item])
+
+    console.log(isAuth?.data.id,'iddddddddddddd')
 
 
     return (
@@ -59,7 +59,6 @@ const MainCommentsPage = () => {
                         user={obj.user}
                         created_at={obj.created_at}
                         comments={obj.comments}
-                        isEditable={obj.user.id === isAuth?.data.id}
                         isAuth={isAuth}
                     />
                 )

@@ -31,23 +31,6 @@ export const fetchRegister = createAsyncThunk("auth/fetchAuth", async (params,{r
   }
 });
 
-export const fetchRefresh = createAsyncThunk("auth/fetchRefresh", async (
-    _, {dispatch, rejectWithValue}) => {
-    try {
-        const {data} = await axios.post("/auth/refresh",
-            {clientKey: `${window.localStorage.getItem("clientKey")}`},
-            {
-                headers: {Authorization: `Bearer ${window.localStorage.getItem("refreshToken")}`}
-            });
-        return data;
-
-    } catch (e) {
-        if (e.response.data.message === 'jwt expired') {
-
-            return rejectWithValue(dispatch(logout()));
-        }
-    }
-});
 
 export const fetchAuthMe = createAsyncThunk("auth/fetchAuthMe", async (
     params, {dispatch, rejectWithValue}) => {
@@ -56,7 +39,6 @@ export const fetchAuthMe = createAsyncThunk("auth/fetchAuthMe", async (
         return data;
 
     } catch (e) {
-        console.log(e.response.data.message, `''''''''''''''''''''''''''''''''''`);
         return rejectWithValue(dispatch(customErr(e.response.data.message)))
 
 
@@ -120,20 +102,6 @@ const authSlice = createSlice({
             state.status = "error";
         },
 
-
-        [fetchRefresh.pending]: (state) => {
-            state.status = "loading";
-            state.data = null;
-        },
-        [fetchRefresh.fulfilled]: (state, action) => {
-            state.status = "loaded";
-            state.data = action.payload;
-        },
-        [fetchRefresh.rejected]: (state) => {
-            state.data = null;
-            state.status = "error";
-
-        }
     }
 });
 
