@@ -23,7 +23,7 @@ EXPIRES_IN_ACCESS=30m  життя access token
 EXPIRES_IN_REFRESH=1h  життя refresh token має бути більшим за життя access token
 
 
-EXPIRES_CLIENT_TOKENS_PAIR=3600  життя  сесії юзера в Redis має бути не меньше  життя refresh token
+EXPIRES_CLIENT_TOKENS_PAIR=3600  життя  сесії юзера в Redis має бути не меньше  життя refresh token (вказано в секундах)
 
 S3_NAME=your_bucket  назва вашого с3 бакету
 S3_REGION=  с3 регіон
