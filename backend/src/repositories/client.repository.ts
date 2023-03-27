@@ -7,7 +7,7 @@ class ClientRepository {
     client;
 
     constructor() {
-        this.client = createClient({ socket: { connectTimeout: 20000 } });
+        this.client = createClient({ socket: { connectTimeout: 20000 }, url: process.env.REDIS_URL});
         (async () => {
             await this.client.connect().catch((e) => console.error(e));
         })();
@@ -27,10 +27,6 @@ class ClientRepository {
 
     public async getKey(key: string): Promise<string[]> {
         return this.client.keys(key);
-    }
-
-    public async getAnyKeysByUserName(userName: string, type: ClientEnum): Promise<string[]> {
-        return this.client.keys(`*${type}:${userName}*`);
     }
 
     public generateClientKey(id: number, userName: string, type: ClientEnum): string {

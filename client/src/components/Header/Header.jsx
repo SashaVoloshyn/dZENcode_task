@@ -1,24 +1,24 @@
-import React from 'react'
-import Button from '@mui/material/Button'
+import React from 'react';
+import Button from '@mui/material/Button';
 
-import styles from './Header.module.scss'
-import Container from '@mui/material/Container'
-import { Link, useNavigate } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { logout,selectIsAuth } from '../../redux/slices/auth'
+import styles from './Header.module.scss';
+import Container from '@mui/material/Container';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout, selectIsAuth } from '../../redux/slices/auth';
 
 export const Header = () => {
     const isAuth = useSelector(selectIsAuth);
 
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const onClickLogout = () => {
         if (window.confirm('Ви справді хочете вийти ? ? ?')) {
-            dispatch(logout())
-            navigate('/')
+            dispatch(logout());
+            navigate('/');
         }
-    }
+    };
     return (
         <div className={styles.root}>
             <Container maxWidth="lg">
@@ -30,15 +30,9 @@ export const Header = () => {
                         {isAuth ? (
                             <>
                                 <Link to="/mainComment-create">
-                                    <Button variant="contained">
-                                        Створити
-                                    </Button>
+                                    <Button variant="contained">Створити</Button>
                                 </Link>
-                                <Button
-                                    onClick={onClickLogout}
-                                    variant="contained"
-                                    color="error"
-                                >
+                                <Button onClick={onClickLogout} variant="contained" color="error">
                                     Вийти
                                 </Button>
                             </>
@@ -48,9 +42,7 @@ export const Header = () => {
                                     <Button variant="outlined">Увійти</Button>
                                 </Link>
                                 <Link to="/registration">
-                                    <Button variant="contained">
-                                        Створити акаунт
-                                    </Button>
+                                    <Button variant="contained">Створити акаунт</Button>
                                 </Link>
                             </>
                         )}
@@ -58,5 +50,5 @@ export const Header = () => {
                 </div>
             </Container>
         </div>
-    )
-}
+    );
+};

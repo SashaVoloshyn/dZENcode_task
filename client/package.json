@@ -7,12 +7,12 @@
         "@emotion/styled": "^11.8.1",
         "@hookform/resolvers": "^2.9.11",
         "@mui/icons-material": "^5.8.0",
-        "@mui/joy": "^5.0.0-alpha.71",
         "@mui/material": "^5.8.0",
         "@reduxjs/toolkit": "^1.8.2",
         "axios": "^0.27.2",
         "buffer": "^6.0.3",
         "clsx": "^1.1.1",
+        "file-saver": "^2.0.5",
         "html-react-parser": "3.0.12",
         "joi": "^17.8.3",
         "prettier": "^2.6.2",
@@ -27,6 +27,7 @@
         "web-vitals": "^2.1.4"
     },
     "scripts": {
+        "format": "prettier --write \"src/**/*.{js,jsx}\"",
         "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",

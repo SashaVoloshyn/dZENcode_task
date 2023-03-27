@@ -23,3 +23,7 @@
 /backend/node_modules
 /backend/package-lock.json
 /backend/.env
+
+/client_build
+/pg
+/redis

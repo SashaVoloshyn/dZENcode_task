@@ -1,7 +1,6 @@
-import Joi from "joi";
+import Joi from 'joi';
 
-import {regexConstant} from "../constants";
-
+import { regexConstant } from '../constants';
 
 export const joiCommonValidator = {
     email: Joi.string().min(5).max(40).trim().regex(regexConstant.EMAIL).messages({

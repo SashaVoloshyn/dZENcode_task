@@ -1,0 +1,44 @@
+version: "3.7"
+
+services:
+  backend_service:
+    build:
+      context: .
+    ports:
+      - "5050:5050"
+    env_file:
+      - ./backend/.env
+    restart: always
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    command: >
+      /wait-for-it.sh db:5432 redis_service:6379 -- bash -c "npm run migration:run && npm run start"
+  db:
+    image: postgres:14.3
+    ports:
+      - "5433:5432"
+    env_file:
+      - ./backend/.env
+    restart: on-failure
+    volumes:
+      - ./pg:/var/lib/postgresql/data
+  client_service:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    env_file:
+      - ./client/.env
+    restart: on-failure
+    volumes:
+      - ./client_build:/usr/share/nginx/html
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+  redis_service:
+    image: redis:7
+    ports:
+      - "6389:6379"
+    env_file:
+      - ./backend/.env
+    restart: on-failure
+    volumes:
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf

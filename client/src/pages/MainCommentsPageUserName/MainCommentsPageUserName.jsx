@@ -1,41 +1,38 @@
 import React from 'react';
-import {useDispatch, useSelector} from "react-redux";
-import {fetchMainCommentsUserName, getPage} from "../../redux/slices/mainComments";
-import {MainComment} from "../../components";
-import {useSearchParams} from "react-router-dom";
-import Paginator from "../../components/Paginator/Paginator";
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchMainCommentsUserName, getPage } from '../../redux/slices/mainComments';
+import { MainComment } from '../../components';
+import { useSearchParams } from 'react-router-dom';
+import Paginator from '../../components/Paginator/Paginator';
 
 const MainCommentsPageUserName = () => {
-    const dispatch = useDispatch()
-    const { mainComments } = useSelector((state) => state.mainComments)
+    const dispatch = useDispatch();
+    const { mainComments } = useSelector((state) => state.mainComments);
 
     const [searchParams, setSearchParams] = useSearchParams();
 
-    const isMainCommentsLoading = mainComments.status === 'loading'
+    const isMainCommentsLoading = mainComments.status === 'loading';
 
-    const isMainCommentsError = mainComments.status === 'error'
+    const isMainCommentsError = mainComments.status === 'error';
 
     React.useEffect(() => {
-        if (!searchParams.get('page') || searchParams.get('page') <=0 ) {
-            setSearchParams({page: '1'})
+        if (!searchParams.get('page') || searchParams.get('page') <= 0) {
+            setSearchParams({ page: '1' });
         }
-        const sort = searchParams.get('sort')
+        const sort = searchParams.get('sort');
 
         const page = searchParams.get('page');
 
-        dispatch(getPage({page}));
+        dispatch(getPage({ page }));
 
-        dispatch(fetchMainCommentsUserName({page,sort}))
+        dispatch(fetchMainCommentsUserName({ page, sort }));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [searchParams,mainComments.item])
+    }, [searchParams, mainComments.item]);
 
-    const isAuth = useSelector((state) => state.auth.data)
+    const isAuth = useSelector((state) => state.auth.data);
     return (
         <>
-            {(isMainCommentsLoading || isMainCommentsError
-                    ? [...Array(5)]
-                    : mainComments.items[0]
-            ).map((obj, index) =>
+            {(isMainCommentsLoading || isMainCommentsError ? [...Array(5)] : mainComments.items[0]).map((obj, index) =>
                 isMainCommentsLoading || isMainCommentsError ? (
                     <MainComment key={index} isLoading={true} />
                 ) : (
@@ -44,6 +41,7 @@ const MainCommentsPageUserName = () => {
                         key={index}
                         pageUrl={obj.pageUrl}
                         fileImg={obj.fileImg}
+                        fileText={obj.fileText}
                         id={obj.id}
                         text={obj.text}
                         user={obj.user}
@@ -53,9 +51,9 @@ const MainCommentsPageUserName = () => {
                     />
                 )
             )}
-            <Paginator/>
+            <Paginator />
         </>
-    )
+    );
 };
 
 export default MainCommentsPageUserName;

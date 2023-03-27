@@ -1,8 +1,8 @@
-import React from 'react'
-import Stack from '@mui/material/Stack'
-import Skeleton from '@mui/material/Skeleton'
+import React from 'react';
+import Stack from '@mui/material/Stack';
+import Skeleton from '@mui/material/Skeleton';
 
-import styles from './MainComment.module.scss'
+import styles from './MainComment.module.scss';
 
 export const MainCommentSkeleton = () => {
     return (
@@ -10,12 +10,7 @@ export const MainCommentSkeleton = () => {
             <Stack spacing={1}>
                 <div className={styles.skeletonContent}>
                     <div className={styles.skeletonUser}>
-                        <Skeleton
-                            variant="circular"
-                            width={30}
-                            height={30}
-                            style={{ marginRight: 10 }}
-                        />
+                        <Skeleton variant="circular" width={30} height={30} style={{ marginRight: 10 }} />
                         <div className={styles.skeletonUserDetails}>
                             <Skeleton variant="text" width={60} height={20} />
                             <Skeleton variant="text" width={100} height={15} />
@@ -33,5 +28,5 @@ export const MainCommentSkeleton = () => {
                 </div>
             </Stack>
         </div>
-    )
-}
+    );
+};
