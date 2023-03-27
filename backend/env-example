@@ -1,0 +1,32 @@
+PORT=5050 порт на якому буде буде стартувати сервер (якщо пишете свій то у файлі ./docker-compose в backend_service потрібно буде замінити на ваш)
+
+
+PG_NAME_DATABASE=test_db    назва вашої бази данних
+PG_USER_NAME_DATABASE=postgres  назва юзера бази данних
+PG_HOST_DATABASE=db  хост (так як названий сервіс в ./docker-compose або  localhost якщо запускати не через докер )
+PG_PORT_DATABASE=5432 порт
+PG_PASSWORD_DATABASE=test_pass пароль до бази данних
+
+POSTGRES_PASSWORD=test_pass (обов'язкове поле для докера. Значення таке як в PG_PASSWORD_DATABASE)
+POSTGRES_USER=postgres (обов'язкове поле для докера. Значення таке як в PG_USER_NAME_DATABASE)
+POSTGRES_DB=test_db (обов'язкове поле для докера. Значення таке як в PG_NAME_DATABASE)
+
+REDIS_URL=redis://redis_service  (обов'язкове поле для докера сервіс з ./docker-compose)
+
+PASSWORD_SALT_ROUNDS=10  SALT  для хешування паролів
+
+SECRET_ACCESS_KEY=accesscustom  access token
+SECRET_REFRESH_KEY=refreshcustom refresh token
+
+
+EXPIRES_IN_ACCESS=30m  життя access token
+EXPIRES_IN_REFRESH=1h  життя refresh token має бути більшим за життя access token
+
+
+EXPIRES_CLIENT_TOKENS_PAIR=3600  життя  сесії юзера в Redis має бути не меньше  життя refresh token
+
+S3_NAME=your_bucket  назва вашого с3 бакету
+S3_REGION=  с3 регіон
+S3_ACCESS_KEY=   s3 key
+S3_SECRET_KEY=   s3 secret key
+CLOUD_DOMAIN_NAME=https://your_bucket.s3.amazonaws.com  ссилка для авс (такий самий має бути в ./client/env)

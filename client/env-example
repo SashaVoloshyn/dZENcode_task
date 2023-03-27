@@ -1,0 +1,5 @@
+REACT_APP_SERVER_URL='http://localhost/api/v1' проксі юрл для докера ./nginx.conf .location якщо запускати локально то після localhost вкажіть ваш порт
+REACT_APP_CLOUD_DOMAIN_NAME=https://your_bucket.s3.amazonaws.com  ссилка для авс (такий самий має бути в ./backend/env)
+REACT_APP_ReCAPTCHA_KEY=6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI  ключ для капчі  тут вказаний дев ключ
+
+BUILD_PATH='../client_build'  шлях куди буде білдитись фронт
