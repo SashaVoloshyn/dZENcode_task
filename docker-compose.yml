@@ -13,7 +13,8 @@ services:
       - ./backend:/app
       - /app/node_modules
     command: >
-      /wait-for-it.sh db:5432 redis_service:6379 -- bash -c "npm run migration:run && npm run start"
+      sh -c "npm run migration:run && npm run start"
+#      /wait-for-it.sh db:5432 redis_service:6379 -- bash -c "npm run migration:run && npm run start"  скрипт який піднімає спочатку бази а потім сервер
   db:
     image: postgres:14.3
     ports:
